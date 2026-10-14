@@ -5,61 +5,19 @@ import {
   ExternalLink,
   Copy,
   Check,
-  Coffee,
-  DollarSign,
   ShieldCheck,
   Sparkles,
-  Zap,
   Globe,
-  Coins,
-  QrCode,
   Award,
+  CreditCard,
+  Smartphone,
+  Zap,
 } from 'lucide-react';
 import { useOfficeStore } from '../../store/useOfficeStore';
-
-const GithubIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-  </svg>
-);
-
-interface CryptoWallet {
-  symbol: string;
-  name: string;
-  network: string;
-  address: string;
-  qrPattern: string;
-}
-
-const CRYPTO_WALLETS: CryptoWallet[] = [
-  {
-    symbol: 'BTC',
-    name: 'Bitcoin',
-    network: 'Bitcoin Mainnet (SegWit / Native)',
-    address: 'bc1qapex9ff1ce0pen50urce2026sovere1gndata',
-    qrPattern: 'bitcoin:bc1qapex9ff1ce0pen50urce2026sovere1gndata',
-  },
-  {
-    symbol: 'ETH / USDT',
-    name: 'Ethereum & Tokens',
-    network: 'Ethereum (ERC-20) / Polygon / Arbitrum',
-    address: '0x71C8A69F65B6201e74D7C261975e53cD01c9Apex',
-    qrPattern: 'ethereum:0x71C8A69F65B6201e74D7C261975e53cD01c9Apex',
-  },
-  {
-    symbol: 'XMR',
-    name: 'Monero (100% Anónimo)',
-    network: 'CryptoNote Sovereign Privacy Network',
-    address: '888tNkZrPN6JsEshktqhWcmApex0ff1cePrivateD0nat10nS0vere1gnT0kenXMR2026',
-    qrPattern: 'monero:888tNkZrPN6JsEshktqhWcmApex0ff1cePrivateD0nat10nS0vere1gnT0kenXMR2026',
-  },
-];
 
 export const SupportDonationModal: React.FC = () => {
   const { isDonationModalOpen, setDonationModalOpen } = useOfficeStore();
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'fiat' | 'crypto' | 'tiers'>('fiat');
-  const [selectedCrypto, setSelectedCrypto] = useState<CryptoWallet>(CRYPTO_WALLETS[0]);
 
   if (!isDonationModalOpen) return null;
 
@@ -77,13 +35,13 @@ export const SupportDonationModal: React.FC = () => {
       onClick={() => setDonationModalOpen(false)}
     >
       <div
-        className="relative w-full max-w-3xl my-auto bg-obsidian-900 border border-obsidian-700/90 rounded-2xl shadow-2xl shadow-rose-950/30 overflow-hidden flex flex-col text-slate-200 animate-scale-up max-h-[92vh]"
+        className="relative w-full max-w-2xl my-auto bg-obsidian-900 border border-obsidian-700/90 rounded-2xl shadow-2xl shadow-blue-950/30 overflow-hidden flex flex-col text-slate-200 animate-scale-up max-h-[92vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="relative px-6 py-5 bg-gradient-to-r from-rose-950/40 via-obsidian-900 to-indigo-950/40 border-b border-obsidian-750 flex items-center justify-between shrink-0">
+        <div className="relative px-6 py-5 bg-gradient-to-r from-blue-950/40 via-obsidian-900 to-indigo-950/40 border-b border-obsidian-750 flex items-center justify-between shrink-0">
           <div className="flex items-center space-x-3.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-amber-500 flex items-center justify-center shadow-lg shadow-rose-500/20 text-white shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20 text-white shrink-0">
               <Heart className="w-5 h-5 fill-white" />
             </div>
             <div>
@@ -91,12 +49,12 @@ export const SupportDonationModal: React.FC = () => {
                 <h2 className="text-lg font-bold text-white tracking-tight">
                   Apoyar el Desarrollo de Apex Office
                 </h2>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase bg-rose-500/15 border border-rose-500/30 text-rose-300">
-                  Open Source Soberano
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase bg-blue-500/15 border border-blue-500/30 text-blue-300">
+                  Revolut Bank
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Software libre, privado, sin telemetría ni suscripciones obligatorias. Tu apoyo hace posible este proyecto.
+                Software libre, privado, sin telemetría ni suscripciones obligatorias.
               </p>
             </div>
           </div>
@@ -110,365 +68,143 @@ export const SupportDonationModal: React.FC = () => {
           </button>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex border-b border-obsidian-800 bg-obsidian-950/60 px-6 gap-2 shrink-0">
-          <button
-            onClick={() => setActiveTab('fiat')}
-            className={`py-3 px-4 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors ${
-              activeTab === 'fiat'
-                ? 'border-rose-500 text-rose-400'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <DollarSign className="w-4 h-4" /> Plataformas & Pasarelas
-          </button>
-          <button
-            onClick={() => setActiveTab('crypto')}
-            className={`py-3 px-4 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors ${
-              activeTab === 'crypto'
-                ? 'border-amber-500 text-amber-400'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Coins className="w-4 h-4" /> Criptomonedas (Web3 & Privacidad)
-          </button>
-          <button
-            onClick={() => setActiveTab('tiers')}
-            className={`py-3 px-4 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors ${
-              activeTab === 'tiers'
-                ? 'border-indigo-500 text-indigo-400'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Award className="w-4 h-4" /> ¿En qué se invierten los fondos?
-          </button>
-        </div>
-
         {/* Modal Scrollable Content */}
         <div className="p-6 overflow-y-auto space-y-6">
-          {/* TAB 1: FIAT & DONATION PLATFORMS */}
-          {activeTab === 'fiat' && (
-            <div className="space-y-4">
-              <div className="p-3.5 rounded-xl bg-gradient-to-r from-rose-950/20 to-amber-950/20 border border-rose-500/20 text-xs text-rose-200/90 leading-relaxed">
-                <span className="font-semibold text-white">¿Por qué donar?</span> Apex Office es una alternativa real y soberana a Microsoft 365, LibreOffice y Google Workspace. Todo el código se ejecuta en tu máquina, con cero envío de datos a servidores externos. Tu donación ayuda a financiar el desarrollo de nuevos motores nativos, auditorías de seguridad y compatibilidad multiplataforma.
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {/* Revolut Featured Card */}
-                <div className="col-span-1 sm:col-span-2 p-4 rounded-xl bg-gradient-to-r from-blue-950/40 via-obsidian-950 to-indigo-950/40 border border-blue-500/30 hover:border-blue-400/60 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group shadow-lg shadow-blue-950/20">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-base shadow-md shadow-blue-500/30 shrink-0">
-                        R
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-sm text-white">Revolut Bank</span>
-                          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                            Apple Pay • Google Pay • Tarjeta • Revtag
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-300 mt-0.5">
-                          Donación instantánea mediante <strong>revolut.me/jpscalero</strong> o Revtag <strong>@jpscalero</strong>. Admite tarjetas y monederos digitales sin registrarse.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
-                    <button
-                      onClick={() => handleCopy('@jpscalero', 'revtag')}
-                      className={`py-2 px-3 rounded-lg border text-xs font-medium flex items-center justify-center gap-1.5 transition-all ${
-                        copiedKey === 'revtag'
-                          ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300'
-                          : 'bg-obsidian-900 border-obsidian-750 text-slate-300 hover:bg-obsidian-800'
-                      }`}
-                      title="Copiar Revtag"
-                    >
-                      {copiedKey === 'revtag' ? (
-                        <>
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>¡Revtag Copiado!</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-3.5 h-3.5" />
-                          <span>Copiar @jpscalero</span>
-                        </>
-                      )}
-                    </button>
-
-                    <a
-                      href="https://revolut.me/jpscalero"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-2 px-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-600/30"
-                    >
-                      <span>Donar con Revolut.Me</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  </div>
+          {/* Main Revolut Featured Card */}
+          <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-950/40 via-obsidian-950 to-indigo-950/30 border border-blue-500/40 shadow-xl shadow-blue-950/20 space-y-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-blue-600/30 shrink-0">
+                  R
                 </div>
-
-                {/* GitHub Sponsors */}
-                <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-750 hover:border-pink-500/40 transition-all flex flex-col justify-between group">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-pink-500/20 border border-pink-500/30 flex items-center justify-center text-pink-400">
-                          <GithubIcon className="w-4 h-4" />
-                        </div>
-                        <span className="font-semibold text-sm text-white">GitHub Sponsors</span>
-                      </div>
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-pink-500/15 text-pink-300">
-                        0% Comisión
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                      Patrocina directamente al autor desde GitHub. Recibirás la insignia de Sponsor oficial en tu perfil de desarrollador.
-                    </p>
-                  </div>
-                  <a
-                    href="https://github.com/sponsors/jpscalero"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2 px-3 rounded-lg bg-pink-600 hover:bg-pink-500 text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-pink-600/20"
-                  >
-                    <span>Patrocinar en GitHub</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-
-                {/* Ko-fi */}
-                <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-750 hover:border-rose-500/40 transition-all flex flex-col justify-between group">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400">
-                          <Coffee className="w-4 h-4" />
-                        </div>
-                        <span className="font-semibold text-sm text-white">Ko-fi</span>
-                      </div>
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-rose-500/15 text-rose-300">
-                        Un café
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                      Invítanos a un café puntual o mensual sin necesidad de suscripciones complicadas ni creación obligatoria de cuenta.
-                    </p>
-                  </div>
-                  <a
-                    href="https://ko-fi.com/jpscalero"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2 px-3 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-rose-600/20"
-                  >
-                    <span>Donar en Ko-fi</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-
-                {/* Buy Me a Coffee */}
-                <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-750 hover:border-amber-500/40 transition-all flex flex-col justify-between group">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
-                          <Zap className="w-4 h-4" />
-                        </div>
-                        <span className="font-semibold text-sm text-white">Buy Me a Coffee</span>
-                      </div>
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-500/15 text-amber-300">
-                        Rápido & Fácil
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                      Aporta un café o conviértete en mecenas habitual con tarjeta, Apple Pay o Google Pay en 10 segundos.
-                    </p>
-                  </div>
-                  <a
-                    href="https://buymeacoffee.com/jpscalero"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2 px-3 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-amber-600/20"
-                  >
-                    <span>Buy Me a Coffee</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-
-                {/* PayPal Direct */}
-                <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-750 hover:border-blue-500/40 transition-all flex flex-col justify-between group">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
-                          <DollarSign className="w-4 h-4" />
-                        </div>
-                        <span className="font-semibold text-sm text-white">PayPal.me</span>
-                      </div>
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-blue-500/15 text-blue-300">
-                        Transferencia
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                      Donación directa e instantánea a través de PayPal con la cantidad que tú elijas libremente.
-                    </p>
-                  </div>
-                  <a
-                    href="https://paypal.me/jpscalero"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-600/20"
-                  >
-                    <span>Donar con PayPal</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 2: CRYPTOCURRENCIES */}
-          {activeTab === 'crypto' && (
-            <div className="space-y-4">
-              <div className="p-3.5 rounded-xl bg-obsidian-950 border border-obsidian-800 text-xs text-slate-400 flex items-center gap-3">
-                <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
-                <span>
-                  Las donaciones con criptomonedas son descentralizadas, directas y sin intermediarios bancarios. Soportamos pagos anónimos en Monero (XMR).
-                </span>
-              </div>
-
-              {/* Crypto Selector Chips */}
-              <div className="grid grid-cols-3 gap-2">
-                {CRYPTO_WALLETS.map((wallet) => (
-                  <button
-                    key={wallet.symbol}
-                    onClick={() => setSelectedCrypto(wallet)}
-                    className={`p-3 rounded-xl border text-left transition-all ${
-                      selectedCrypto.symbol === wallet.symbol
-                        ? 'bg-amber-500/15 border-amber-500/50 text-white shadow-md'
-                        : 'bg-obsidian-950 border-obsidian-800 text-slate-400 hover:text-slate-200 hover:border-obsidian-700'
-                    }`}
-                  >
-                    <div className="font-bold text-xs">{wallet.symbol}</div>
-                    <div className="text-[11px] text-slate-400 truncate">{wallet.name}</div>
-                  </button>
-                ))}
-              </div>
-
-              {/* Active Wallet Details Card */}
-              <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-750 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-xs font-semibold text-white">
-                      Red: {selectedCrypto.network}
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-amber-400 font-mono">
-                    {selectedCrypto.symbol}
-                  </span>
-                </div>
-
                 <div>
-                  <label className="text-[11px] text-slate-400 block mb-1">
-                    Dirección Pública de Depósito:
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <div className="flex-1 p-2.5 rounded-lg bg-obsidian-900 border border-obsidian-800 font-mono text-[11px] text-emerald-400 break-all select-all">
-                      {selectedCrypto.address}
-                    </div>
-                    <button
-                      onClick={() => handleCopy(selectedCrypto.address, selectedCrypto.symbol)}
-                      className={`p-2.5 rounded-lg border font-medium text-xs flex items-center gap-1.5 transition-all shrink-0 ${
-                        copiedKey === selectedCrypto.symbol
-                          ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300'
-                          : 'bg-obsidian-800 border-obsidian-700 hover:bg-obsidian-750 text-slate-200'
-                      }`}
-                      title="Copiar dirección"
-                    >
-                      {copiedKey === selectedCrypto.symbol ? (
-                        <>
-                          <Check className="w-4 h-4 text-emerald-400" />
-                          <span>¡Copiado!</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-4 h-4" />
-                          <span>Copiar</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Simulated QR Code helper */}
-                <div className="pt-2 border-t border-obsidian-800/80 flex items-center justify-between text-[11px] text-slate-400">
-                  <span className="flex items-center gap-1.5">
-                    <QrCode className="w-3.5 h-3.5 text-amber-400" /> Compatible con carteras nativas y escaneo QR
+                  <h3 className="font-bold text-base text-white flex items-center gap-2">
+                    Revolut.Me • Donación Directa
+                  </h3>
+                  <span className="text-xs text-blue-300 font-mono">
+                    revolut.me/jpscalero • Revtag: @jpscalero
                   </span>
-                  <span className="text-slate-400">Sin custodia centralizada</span>
                 </div>
+              </div>
+
+              <div className="px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 flex items-center gap-1.5 shrink-0">
+                <Zap className="w-3.5 h-3.5 text-emerald-400" />
+                <span>0% Comisiones</span>
               </div>
             </div>
-          )}
 
-          {/* TAB 3: TRANSPARENCY & FUNDING OBJECTIVES */}
-          {activeTab === 'tiers' && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div className="p-3.5 rounded-xl bg-obsidian-950 border border-obsidian-750 space-y-2">
-                  <div className="flex items-center gap-2 text-indigo-400 font-semibold text-xs">
-                    <Sparkles className="w-4 h-4" /> Nuevos Módulos
-                  </div>
-                  <p className="text-[11px] text-slate-400 leading-relaxed">
-                    Desarrollo de exportadores nativos ODF/OOXML binarios, motor de fórmulas financieras extendidas y compatibilidad con formatos vectoriales SVG y CAD.
-                  </p>
-                </div>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Puedes realizar una donación libre e inmediata a través del enlace oficial de Revolut. <strong>No necesitas tener cuenta en Revolut</strong> para realizar tu aportación.
+            </p>
 
-                <div className="p-3.5 rounded-xl bg-obsidian-950 border border-obsidian-750 space-y-2">
-                  <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs">
-                    <ShieldCheck className="w-4 h-4" /> Auditorías de Seguridad
-                  </div>
-                  <p className="text-[11px] text-slate-400 leading-relaxed">
-                    Verificación continua contra inyección DDE, ataques XXE en hojas de cálculo y endurecimiento de sandboxes locales WebAssembly.
-                  </p>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-obsidian-950 border border-obsidian-750 space-y-2">
-                  <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs">
-                    <Globe className="w-4 h-4" /> Soporte Multiplataforma
-                  </div>
-                  <p className="text-[11px] text-slate-400 leading-relaxed">
-                    Mantenimiento de empaquetados nativos para Windows (.exe portable), GNU/Linux (.AppImage, .deb, .tar.gz) y macOS (.dmg).
-                  </p>
-                </div>
+            {/* Payment Methods Badges */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+              <div className="p-2 rounded-lg bg-obsidian-900 border border-obsidian-750 flex items-center gap-2 text-xs text-slate-300">
+                <Smartphone className="w-4 h-4 text-slate-200" />
+                <span className="text-[11px] font-medium">Apple Pay</span>
               </div>
-
-              <div className="p-4 rounded-xl bg-gradient-to-br from-indigo-950/30 to-obsidian-950 border border-indigo-500/20 text-xs space-y-2">
-                <div className="font-semibold text-white flex items-center gap-2">
-                  <Award className="w-4 h-4 text-indigo-400" /> Compromiso Soberano de Apex Office
-                </div>
-                <p className="text-slate-300 leading-relaxed">
-                  Las funciones fundamentales de Apex Office <strong>siempre serán 100% libres y gratuitas</strong>. El modelo de patrocinio existe para garantizar que el proyecto sea sostenible a largo plazo sin comprometer jamás la privacidad de los usuarios ni vender datos a terceros.
-                </p>
+              <div className="p-2 rounded-lg bg-obsidian-900 border border-obsidian-750 flex items-center gap-2 text-xs text-slate-300">
+                <Smartphone className="w-4 h-4 text-emerald-400" />
+                <span className="text-[11px] font-medium">Google Pay</span>
+              </div>
+              <div className="p-2 rounded-lg bg-obsidian-900 border border-obsidian-750 flex items-center gap-2 text-xs text-slate-300">
+                <CreditCard className="w-4 h-4 text-amber-400" />
+                <span className="text-[11px] font-medium">Tarjetas (Visa/MC)</span>
+              </div>
+              <div className="p-2 rounded-lg bg-obsidian-900 border border-obsidian-750 flex items-center gap-2 text-xs text-slate-300">
+                <Zap className="w-4 h-4 text-blue-400" />
+                <span className="text-[11px] font-medium">Revtag (@jpscalero)</span>
               </div>
             </div>
-          )}
+
+            {/* Direct Action Buttons */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+              <a
+                href="https://revolut.me/jpscalero"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/30 hover:shadow-blue-500/40"
+              >
+                <span>Donar en Revolut.Me</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+
+              <button
+                onClick={() => handleCopy('@jpscalero', 'revtag')}
+                className={`w-full sm:w-auto py-3 px-4 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all shrink-0 ${
+                  copiedKey === 'revtag'
+                    ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300'
+                    : 'bg-obsidian-900 border-obsidian-750 text-slate-200 hover:bg-obsidian-800'
+                }`}
+                title="Copiar Revtag para transferencias en la app de Revolut"
+              >
+                {copiedKey === 'revtag' ? (
+                  <>
+                    <Check className="w-4 h-4 text-emerald-400" />
+                    <span>¡@jpscalero Copiado!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 text-slate-400" />
+                    <span>Copiar Revtag @jpscalero</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Transparency & Objectives Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="p-3.5 rounded-xl bg-obsidian-950 border border-obsidian-750 space-y-1.5">
+              <div className="flex items-center gap-2 text-indigo-400 font-semibold text-xs">
+                <Sparkles className="w-4 h-4" /> Nuevos Módulos
+              </div>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Desarrollo continuo de exportadores ODF/OOXML nativos y herramientas de productividad.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-obsidian-950 border border-obsidian-750 space-y-1.5">
+              <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs">
+                <ShieldCheck className="w-4 h-4" /> Auditorías de Seguridad
+              </div>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Verificación continua contra inyección de fórmulas, ataques DDE y protección criptográfica.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-obsidian-950 border border-obsidian-750 space-y-1.5">
+              <div className="flex items-center gap-2 text-blue-400 font-semibold text-xs">
+                <Globe className="w-4 h-4" /> Soporte Multiplataforma
+              </div>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Mantenimiento de empaquetados nativos y versiones portables para Windows, GNU/Linux y macOS.
+              </p>
+            </div>
+          </div>
+
+          {/* Sovereign Commitment Notice */}
+          <div className="p-4 rounded-xl bg-gradient-to-br from-indigo-950/20 to-obsidian-950 border border-indigo-500/20 text-xs space-y-1.5">
+            <div className="font-semibold text-white flex items-center gap-2">
+              <Award className="w-4 h-4 text-indigo-400" /> Compromiso Soberano de Apex Office
+            </div>
+            <p className="text-slate-300 leading-relaxed">
+              Las funciones fundamentales de Apex Office <strong>siempre serán 100% libres y gratuitas</strong>. Las donaciones son completamente voluntarias y hacen posible el mantenimiento independiente del proyecto sin vender datos ni incluir rastreadores.
+            </p>
+          </div>
         </div>
 
         {/* Modal Footer */}
         <div className="px-6 py-3.5 bg-obsidian-950/90 border-t border-obsidian-800 flex items-center justify-between shrink-0">
           <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/30" />
-            <span>Desarrollado con pasión para la comunidad de código abierto</span>
+            <Heart className="w-3.5 h-3.5 text-blue-400 fill-blue-400/30" />
+            <span>Desarrollado para la comunidad de código abierto</span>
           </div>
           <button
             onClick={() => setDonationModalOpen(false)}
             className="py-1.5 px-4 rounded-lg bg-obsidian-800 hover:bg-obsidian-700 text-white text-xs font-medium transition-colors"
           >
-            Entendido
+            Cerrar
           </button>
         </div>
       </div>

@@ -403,7 +403,7 @@ export const OfficeMenuBar: React.FC = () => {
           action: () => setAdManagerOpen(true),
         },
         {
-          label: 'Apoyar el Proyecto / Donaciones (PayPal, Ko-fi, Crypto)...',
+          label: 'Apoyar el Proyecto / Donar (Revolut Bank)...',
           icon: Heart,
           action: toggleDonationModal,
         },
@@ -425,7 +425,7 @@ export const OfficeMenuBar: React.FC = () => {
           action: () => alert('Apex Office Suite v1.0 • Suite Ofimática Libre, Nativa y Segura.\nProtegida contra inyección DDE, fórmulas maliciosas, macros vulnerables y fugas NetNTLM.\n100% Offline / Local-First.'),
         },
         {
-          label: 'Apoyar el Proyecto / Donar (PayPal, Ko-fi, Sponsors)...',
+          label: 'Apoyar el Proyecto / Donar (Revolut)...',
           icon: Heart,
           action: toggleDonationModal,
         },

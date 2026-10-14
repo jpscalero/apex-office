@@ -9,10 +9,6 @@
 [![Vite](https://img.shields.io/badge/Vite-6.x-646CFF.svg)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC.svg)](https://tailwindcss.com/)
 [![License: MPL-2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
-[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa.svg?style=flat&logo=github)](https://github.com/sponsors/jpscalero)
-[![Ko-Fi](https://img.shields.io/badge/Ko--fi-Apoyar-ff5e5b.svg?logo=ko-fi)](https://ko-fi.com/jpscalero)
-[![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Donar-orange.svg?logo=buy-me-a-coffee)](https://buymeacoffee.com/jpscalero)
-[![PayPal](https://img.shields.io/badge/PayPal-Donar-00457C.svg?logo=paypal)](https://paypal.me/jpscalero)
 [![Revolut](https://img.shields.io/badge/Revolut-revolut.me%2Fjpscalero-0075eb.svg?logo=revolut&logoColor=white)](https://revolut.me/jpscalero)
 
 ---
@@ -151,28 +147,19 @@ Consulta el **[Informe Técnico de Remediación (REMEDIATION-REPORT.md)](./REMED
 
 Apex Office es un proyecto **100% de código abierto, soberano y sin ánimo de lucro corporativo**. No vendemos datos personales, no incluimos rastreadores de telemetría y todas las funcionalidades nucleares son y seguirán siendo libres.
 
-Si valoras tener una alternativa privada, rápida y sin suscripciones a Microsoft 365 y Google Workspace, puedes apoyar el desarrollo continuo a través de cualquiera de los siguientes canales:
+Si valoras tener una alternativa privada, rápida y sin suscripciones a Microsoft 365 y Google Workspace, puedes apoyar el desarrollo continuo directamente a través de **Revolut Bank**:
 
-### Pasarelas y Plataformas de Mecenazgo
+### 💳 Donación Directa vía Revolut Bank
 
-| Plataforma | Enlace Directo | Descripción |
-| :--- | :--- | :--- |
-| **Revolut Bank** ⭐ | [![Revolut](https://img.shields.io/badge/Revolut-revolut.me%2Fjpscalero-0075eb?style=flat&logo=revolut&logoColor=white)](https://revolut.me/jpscalero) | Donación directa instantánea con Apple Pay, Google Pay, Tarjeta o Revtag `@jpscalero`. Sin intermediarios. |
-| **GitHub Sponsors** | [![Sponsor](https://img.shields.io/badge/GitHub%20Sponsors-Patrocinar-ea4aaa?style=flat&logo=github)](https://github.com/sponsors/jpscalero) | 0% comisión para desarrolladores. Insignia oficial en GitHub. |
-| **Ko-fi** | [![Ko-fi](https://img.shields.io/badge/Ko--fi-Invitar%20a%20un%20café-ff5e5b?style=flat&logo=ko-fi)](https://ko-fi.com/jpscalero) | Aportaciones puntuales o mensuales sin registros obligatorios. |
-| **Buy Me a Coffee** | [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Donar-orange?style=flat&logo=buy-me-a-coffee)](https://buymeacoffee.com/jpscalero) | Donaciones rápidas mediante tarjeta, Apple Pay o Google Pay. |
-| **PayPal** | [![PayPal](https://img.shields.io/badge/PayPal-Donación%20Directa-00457C?style=flat&logo=paypal)](https://paypal.me/jpscalero) | Transferencia directa e instantánea con importe libre. |
+[![Revolut Donar](https://img.shields.io/badge/Revolut-revolut.me%2Fjpscalero-0075eb?style=for-the-badge&logo=revolut&logoColor=white)](https://revolut.me/jpscalero)
 
-### Criptomonedas Soberanas (Web3 / Descentralizadas)
-
-Para donaciones directas o anónimas sin intermediarios financieros:
-
-* **Bitcoin (BTC)**: `bc1qapex9ff1ce0pen50urce2026sovere1gndata`
-* **Ethereum / USDT / USDC (ERC-20 & Polygon)**: `0x71C8A69F65B6201e74D7C261975e53cD01c9Apex`
-* **Monero (XMR - Privacidad Total)**: `888tNkZrPN6JsEshktqhWcmApex0ff1cePrivateD0nat10nS0vere1gnT0kenXMR2026`
+* **Enlace directo de pago:** [**revolut.me/jpscalero**](https://revolut.me/jpscalero)
+* **Revtag (App Revolut):** `@jpscalero`
+* **Métodos aceptados:** Apple Pay, Google Pay, Tarjetas de débito/crédito (Visa / Mastercard) y transferencias instantáneas entre usuarios de Revolut.
+* **Sin comisiones:** El 100% del importe donado va íntegramente al desarrollo del software libre.
 
 > [!NOTE]
-> También puedes acceder al modal interactivo de donaciones directamente dentro de la aplicación haciendo clic en el icono de corazón **(❤️ Donar)** en la barra superior o en el menú `Ayuda` > `Apoyar el Proyecto / Donar...`.
+> No necesitas tener cuenta en Revolut para donar; al pulsar en el enlace puedes pagar al instante con Apple Pay, Google Pay o cualquier tarjeta bancaria. También puedes acceder al modal de donaciones dentro de la aplicación haciendo clic en el icono de corazón **(❤️ Donar)** en la barra superior.
 
 ---
 
