@@ -27,6 +27,7 @@ import {
   Lock,
   Cookie,
   Crown,
+  Heart,
 } from 'lucide-react';
 import { useOfficeStore } from '../../store/useOfficeStore';
 import { OfficeModule } from '../../types';
@@ -48,6 +49,7 @@ export const TopNavBar: React.FC = () => {
     setPrivacyCenterOpen,
     isProLicense,
     setAdManagerOpen,
+    toggleDonationModal,
     theme,
     toggleTheme,
     docs,
@@ -255,6 +257,16 @@ export const TopNavBar: React.FC = () => {
         >
           <Crown className={`w-3.5 h-3.5 shrink-0 ${isProLicense ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`} />
           <span className="hidden 2xl:inline">{isProLicense ? 'Pro' : 'Ads / Pro'}</span>
+        </button>
+
+        {/* Support & Donations Button */}
+        <button
+          onClick={toggleDonationModal}
+          className="flex items-center space-x-1 px-2 py-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs font-medium hover:bg-rose-500/25 transition-all shadow-sm shrink-0"
+          title="Apoyar el proyecto / Donaciones para seguir mejorando Apex Office"
+        >
+          <Heart className="w-3.5 h-3.5 text-rose-500 shrink-0 fill-rose-500/30" />
+          <span className="hidden xl:inline">Donar</span>
         </button>
 
         {/* Command Palette Trigger */}

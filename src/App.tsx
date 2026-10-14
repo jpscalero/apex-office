@@ -61,6 +61,9 @@ const SecurityAuditModal = React.lazy(() =>
 const PrivacyComplianceCenterModal = React.lazy(() =>
   import('./components/modals/PrivacyComplianceCenterModal').then((m) => ({ default: m.PrivacyComplianceCenterModal }))
 );
+const SupportDonationModal = React.lazy(() =>
+  import('./components/modals/SupportDonationModal').then((m) => ({ default: m.SupportDonationModal }))
+);
 
 const ViewSuspenseFallback: React.FC = () => (
   <div className="flex-1 flex flex-col items-center justify-center p-8 bg-slate-50/50 dark:bg-slate-900/50">
@@ -181,6 +184,7 @@ export const App: React.FC = () => {
         <MacroScriptIDEModal />
         <TimeMachineDrawer />
         <PrivacyComplianceCenterModal />
+        <SupportDonationModal />
       </Suspense>
     </div>
   );

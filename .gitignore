@@ -7,13 +7,21 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Dependencies
+# Dependencies & Build artifacts
 node_modules
 dist
 dist-electron
 dist-win
 dist-ssr
 *.local
+
+# Large native desktop binaries (> 50 MB, published via GitHub Releases)
+ApexOffice-Portable-x64.zip
+*.exe
+*.msi
+*.dmg
+*.AppImage
+*.deb
 
 # Editor directories and files
 .vscode/*

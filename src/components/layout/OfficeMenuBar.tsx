@@ -31,6 +31,7 @@ import {
   Lock,
   Cookie,
   Megaphone,
+  Heart,
 } from 'lucide-react';
 import { useOfficeStore } from '../../store/useOfficeStore';
 
@@ -56,6 +57,7 @@ export const OfficeMenuBar: React.FC = () => {
     setActivePrivacyTab,
     setPrivacyCenterOpen,
     setAdManagerOpen,
+    toggleDonationModal,
     createDoc,
     createSpreadsheet,
     addSlide,
@@ -401,6 +403,11 @@ export const OfficeMenuBar: React.FC = () => {
           action: () => setAdManagerOpen(true),
         },
         {
+          label: 'Apoyar el Proyecto / Donaciones (PayPal, Ko-fi, Crypto)...',
+          icon: Heart,
+          action: toggleDonationModal,
+        },
+        {
           label: 'Paleta Universal de Comandos CLI...',
           icon: Search,
           shortcut: 'Ctrl+K',
@@ -416,6 +423,11 @@ export const OfficeMenuBar: React.FC = () => {
           label: 'Acerca de Apex Office Suite v1.0...',
           icon: HelpCircle,
           action: () => alert('Apex Office Suite v1.0 • Suite Ofimática Libre, Nativa y Segura.\nProtegida contra inyección DDE, fórmulas maliciosas, macros vulnerables y fugas NetNTLM.\n100% Offline / Local-First.'),
+        },
+        {
+          label: 'Apoyar el Proyecto / Donar (PayPal, Ko-fi, Sponsors)...',
+          icon: Heart,
+          action: toggleDonationModal,
         },
         {
           label: 'Cumplimiento Legal & Privacidad (RGPD / LOPDGDD)...',

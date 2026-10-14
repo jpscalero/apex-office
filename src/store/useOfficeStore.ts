@@ -65,6 +65,9 @@ interface OfficeState {
   activateProLicense: (key: string) => boolean;
   isAdManagerOpen: boolean;
   setAdManagerOpen: (open: boolean) => void;
+  isDonationModalOpen: boolean;
+  setDonationModalOpen: (open: boolean) => void;
+  toggleDonationModal: () => void;
 
   // 1. Writer State
   docs: DocItem[];
@@ -251,6 +254,9 @@ export const useOfficeStore = create<OfficeState>()(
       },
       isAdManagerOpen: false,
       setAdManagerOpen: (open) => set({ isAdManagerOpen: open }),
+      isDonationModalOpen: false,
+      setDonationModalOpen: (open) => set({ isDonationModalOpen: open }),
+      toggleDonationModal: () => set((state) => ({ isDonationModalOpen: !state.isDonationModalOpen })),
 
       // 1. Writer
       docs: INITIAL_DOCS,

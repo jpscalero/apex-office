@@ -1,0 +1,7 @@
+# GitHub Sponsors & Funding configuration for Apex Office
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+github: [jpscalero]
+ko_fi: jpscalero
+buy_me_a_coffee: jpscalero
+custom: ['https://paypal.me/jpscalero', 'https://ko-fi.com/jpscalero']
