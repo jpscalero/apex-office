@@ -1,0 +1,320 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: #0c0e12;
+    --text-main: #e2e8f0;
+  }
+
+  html, body, #root {
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  body {
+    background-color: #0c0e12;
+    color: #e2e8f0;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    user-select: none;
+  }
+
+  /* Custom Slim Scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #222834;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #323a4b;
+  }
+
+  ::selection {
+    background-color: rgba(99, 102, 241, 0.35);
+    color: #ffffff;
+  }
+}
+
+/* Document content styles for Apex Writer */
+.prose-apex {
+  color: #d1d5db;
+  line-height: 1.75;
+}
+
+.prose-apex h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.prose-apex h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-apex h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-apex p {
+  margin-bottom: 0.85rem;
+}
+
+.prose-apex code {
+  background: #161a22;
+  color: #38bdf8;
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875em;
+  border: 1px solid #222834;
+}
+
+.prose-apex pre {
+  background: #11141a;
+  border: 1px solid #222834;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.prose-apex table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.prose-apex th, .prose-apex td {
+  border: 1px solid #222834;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.prose-apex th {
+  background: #161a22;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.prose-apex blockquote {
+  border-left: 3px solid #6366f1;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Print Rules for A4 Clean Export */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-page {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 20mm !important;
+    width: 100% !important;
+  }
+}
+
+/* =========================================================================
+   THEME: MODO CLÁSICO / NORMAL (LIGHT OFFICE) vs MODO OSCURO (OBSIDIAN)
+   ========================================================================= */
+
+.theme-classic {
+  --bg-main: #f8fafc;
+  --text-main: #0f172a;
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Transforma los contenedores oscuros a superficies limpias de oficina clásica */
+.theme-classic .bg-obsidian-950 {
+  background-color: #f1f5f9 !important; /* Mesa de trabajo / Desk */
+}
+.theme-classic .bg-obsidian-900 {
+  background-color: #ffffff !important; /* Barras, Ribbons, Tarjetas */
+}
+.theme-classic .bg-obsidian-850 {
+  background-color: #f8fafc !important; /* Cajas de búsqueda, botones secundarios */
+}
+.theme-classic .bg-obsidian-800 {
+  background-color: #e2e8f0 !important; /* Divisores activos, hovers */
+}
+
+/* Bordes nítidos de suite de oficina clásica */
+.theme-classic .border-obsidian-850,
+.theme-classic .border-obsidian-800,
+.theme-classic .border-obsidian-750,
+.theme-classic .border-obsidian-700 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Tipografía de alto contraste estándar para lectura y cálculo */
+.theme-classic .text-white:not(.keep-white),
+.theme-classic .text-slate-100,
+.theme-classic .text-slate-200 {
+  color: #0f172a !important;
+}
+.theme-classic .text-slate-300 {
+  color: #1e293b !important;
+}
+.theme-classic .text-slate-400 {
+  color: #64748b !important;
+}
+.theme-classic .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* Los botones primarios con fondo de color mantienen texto blanco nítido */
+.theme-classic .bg-indigo-600,
+.theme-classic .bg-indigo-600 *,
+.theme-classic .bg-blue-600,
+.theme-classic .bg-blue-600 *,
+.theme-classic .bg-emerald-600,
+.theme-classic .bg-emerald-600 *,
+.theme-classic .bg-rose-600,
+.theme-classic .bg-rose-600 *,
+.theme-classic .bg-purple-600,
+.theme-classic .bg-purple-600 *,
+.theme-classic .keep-white {
+  color: #ffffff !important;
+}
+
+/* Hovers suaves de oficina */
+.theme-classic .hover\:bg-obsidian-800:hover,
+.theme-classic .hover\:bg-obsidian-850:hover,
+.theme-classic .hover\:bg-obsidian-900:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* Estilos de Documento Writer en Modo Clásico */
+.theme-classic .prose-apex {
+  color: #1e293b !important;
+}
+.theme-classic .prose-apex h1 {
+  color: #0f172a !important;
+}
+.theme-classic .prose-apex h2 {
+  color: #1e293b !important;
+}
+.theme-classic .prose-apex h3 {
+  color: #334155 !important;
+}
+.theme-classic .prose-apex p {
+  color: #334155 !important;
+}
+.theme-classic .prose-apex code {
+  background: #f1f5f9 !important;
+  color: #0284c7 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+.theme-classic .prose-apex pre {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}
+.theme-classic .prose-apex table th {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+.theme-classic .prose-apex table td {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #1e293b !important;
+}
+.theme-classic .prose-apex blockquote {
+  border-left-color: #2563eb !important;
+  color: #475569 !important;
+  background-color: #f8fafc !important;
+}
+
+/* Scrollbars claros en modo clásico */
+.theme-classic ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+.theme-classic ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Cuadrícula de Hoja de Cálculo en Modo Clásico (Paridad Excel / LibreOffice Calc) */
+.theme-classic table {
+  background-color: #ffffff !important;
+}
+.theme-classic table thead tr {
+  background-color: #f1f5f9 !important;
+}
+.theme-classic table thead th {
+  background-color: #f1f5f9 !important;
+  color: #334155 !important;
+  border-color: #cbd5e1 !important;
+}
+.theme-classic table tbody tr {
+  background-color: #ffffff !important;
+}
+.theme-classic table tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+.theme-classic table tbody td {
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+.theme-classic table tbody td:first-child {
+  background-color: #f1f5f9 !important;
+  color: #64748b !important;
+  border-color: #cbd5e1 !important;
+}
+.theme-classic table tbody td.bg-emerald-600\/20,
+.theme-classic table tbody td.ring-emerald-500 {
+  background-color: #ecfdf5 !important;
+  color: #047857 !important;
+  box-shadow: inset 0 0 0 2px #10b981 !important;
+}
+
+/* Formularios, inputs y barras de fórmulas en modo clásico */
+.theme-classic input[type="text"],
+.theme-classic input[type="number"],
+.theme-classic select,
+.theme-classic textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+.theme-classic input::placeholder,
+.theme-classic textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Modales y paneles flotantes en modo clásico */
+.theme-classic .shadow-2xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+}
