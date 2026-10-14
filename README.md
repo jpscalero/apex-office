@@ -13,6 +13,7 @@
 [![Ko-Fi](https://img.shields.io/badge/Ko--fi-Apoyar-ff5e5b.svg?logo=ko-fi)](https://ko-fi.com/jpscalero)
 [![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Donar-orange.svg?logo=buy-me-a-coffee)](https://buymeacoffee.com/jpscalero)
 [![PayPal](https://img.shields.io/badge/PayPal-Donar-00457C.svg?logo=paypal)](https://paypal.me/jpscalero)
+[![Revolut](https://img.shields.io/badge/Revolut-revolut.me%2Fjpscalero-0075eb.svg?logo=revolut&logoColor=white)](https://revolut.me/jpscalero)
 
 ---
 
@@ -156,6 +157,7 @@ Si valoras tener una alternativa privada, rápida y sin suscripciones a Microsof
 
 | Plataforma | Enlace Directo | Descripción |
 | :--- | :--- | :--- |
+| **Revolut Bank** ⭐ | [![Revolut](https://img.shields.io/badge/Revolut-revolut.me%2Fjpscalero-0075eb?style=flat&logo=revolut&logoColor=white)](https://revolut.me/jpscalero) | Donación directa instantánea con Apple Pay, Google Pay, Tarjeta o Revtag `@jpscalero`. Sin intermediarios. |
 | **GitHub Sponsors** | [![Sponsor](https://img.shields.io/badge/GitHub%20Sponsors-Patrocinar-ea4aaa?style=flat&logo=github)](https://github.com/sponsors/jpscalero) | 0% comisión para desarrolladores. Insignia oficial en GitHub. |
 | **Ko-fi** | [![Ko-fi](https://img.shields.io/badge/Ko--fi-Invitar%20a%20un%20café-ff5e5b?style=flat&logo=ko-fi)](https://ko-fi.com/jpscalero) | Aportaciones puntuales o mensuales sin registros obligatorios. |
 | **Buy Me a Coffee** | [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Donar-orange?style=flat&logo=buy-me-a-coffee)](https://buymeacoffee.com/jpscalero) | Donaciones rápidas mediante tarjeta, Apple Pay o Google Pay. |

@@ -154,6 +154,62 @@ export const SupportDonationModal: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {/* Revolut Featured Card */}
+                <div className="col-span-1 sm:col-span-2 p-4 rounded-xl bg-gradient-to-r from-blue-950/40 via-obsidian-950 to-indigo-950/40 border border-blue-500/30 hover:border-blue-400/60 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group shadow-lg shadow-blue-950/20">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-base shadow-md shadow-blue-500/30 shrink-0">
+                        R
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-sm text-white">Revolut Bank</span>
+                          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                            Apple Pay • Google Pay • Tarjeta • Revtag
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-300 mt-0.5">
+                          Donación instantánea mediante <strong>revolut.me/jpscalero</strong> o Revtag <strong>@jpscalero</strong>. Admite tarjetas y monederos digitales sin registrarse.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                    <button
+                      onClick={() => handleCopy('@jpscalero', 'revtag')}
+                      className={`py-2 px-3 rounded-lg border text-xs font-medium flex items-center justify-center gap-1.5 transition-all ${
+                        copiedKey === 'revtag'
+                          ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300'
+                          : 'bg-obsidian-900 border-obsidian-750 text-slate-300 hover:bg-obsidian-800'
+                      }`}
+                      title="Copiar Revtag"
+                    >
+                      {copiedKey === 'revtag' ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>¡Revtag Copiado!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>Copiar @jpscalero</span>
+                        </>
+                      )}
+                    </button>
+
+                    <a
+                      href="https://revolut.me/jpscalero"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-2 px-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-600/30"
+                    >
+                      <span>Donar con Revolut.Me</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+
                 {/* GitHub Sponsors */}
                 <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-750 hover:border-pink-500/40 transition-all flex flex-col justify-between group">
                   <div>
