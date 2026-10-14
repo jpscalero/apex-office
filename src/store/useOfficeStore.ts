@@ -131,89 +131,34 @@ interface OfficeState {
   newFromShortcut: (type: 'doc' | 'sheet' | 'deck') => void;
 }
 
-// Initial Data
+// Initial Clean Slate Data (Zero Emulation / Zero Mock Data)
 const INITIAL_DOCS: DocItem[] = [
   {
     id: 'doc-1',
-    title: 'Estatuto de Seguridad & Arquitectura de Software v2.4',
-    content: `<h1>Estatuto de Seguridad & Arquitectura de Software</h1>
-<p>Este documento define las directrices y estándares de desarrollo para la nueva infraestructura tecnológica de <strong>Apex Suite</strong>. El objetivo prioritario es garantizar la integridad del código, erradicar dependencias vulnerables y establecer un modelo de confianza cero (Zero-Trust).</p>
-
-<h2>1. Directivas de Protección en Hojas de Cálculo</h2>
-<p>Queda terminantemente prohibida la ejecución de comandos dinámicos mediante <code>DDE (Dynamic Data Exchange)</code>. Todo archivo CSV importado se procesará bajo la directiva de texto plano estricto para neutralizar vectores de inyección de fórmulas (CWE-1236).</p>
-
-<h2>2. Sandboxing de Automatizaciones</h2>
-<p>Las macros tradicionales en Visual Basic for Applications (VBA) han sido reemplazadas por un motor de extensiones en <strong>WebAssembly (WASM)</strong>. Los scripts de usuario se ejecutan en un espacio de memoria aislado sin acceso al sistema de archivos local ni a llamadas de red no autorizadas.</p>
-
-<h2>3. Privacidad y Eliminación de Metadatos</h2>
-<p>Antes de la publicación de cualquier entregable en formato digital, el módulo <em>Privacy Stripper</em> purgará automáticamente los identificadores de máquina (RSID), rutas de red UNC y el historial de cambios oculto.</p>`,
-    wordCount: 178,
-    charCount: 1240,
-    readingTimeMin: 1,
-    lastModified: Date.now() - 3600 * 1000 * 2,
-    tags: ['Seguridad', 'Arquitectura', 'Oficial'],
-    isFavorite: true,
-  },
-  {
-    id: 'doc-2',
-    title: 'Informe Trimestral de Rendimiento y Balance Q4',
-    content: `<h1>Resumen Ejecutivo de Rendimiento</h1>
-<p>Durante el último trimestre, la migración de microservicios hacia contenedores ligeros ha reducido el tiempo de respuesta P99 en un <strong>64%</strong>. A continuación se presentan las conclusiones del análisis operativo.</p>
-<p>Los costes de infraestructura en servidores dedicados se redujeron de forma sustancial gracias a la optimización de cachés distribuidas.</p>`,
-    wordCount: 54,
-    charCount: 380,
-    readingTimeMin: 1,
-    lastModified: Date.now() - 86400 * 1000 * 1,
-    tags: ['Finanzas', 'Q4'],
+    title: 'Documento 1',
+    content: '',
+    wordCount: 0,
+    charCount: 0,
+    readingTimeMin: 0,
+    lastModified: Date.now(),
+    tags: [],
+    isFavorite: false,
   },
 ];
 
 const INITIAL_SHEETS: SpreadsheetItem[] = [
   {
     id: 'sheet-1',
-    title: 'Presupuesto Financiero & Balance de Operaciones',
+    title: 'Libro 1',
     activeSheetId: 's1',
-    lastModified: Date.now() - 3600 * 1000 * 1.5,
+    lastModified: Date.now(),
     sheets: [
       {
         id: 's1',
-        name: 'Presupuesto Anual',
-        rowCount: 30,
-        colCount: 15,
-        cells: {
-          A1: { raw: 'CONCEPTO / PARTIDA', computed: 'CONCEPTO / PARTIDA', style: { bold: true, bg: '#1f2937' } },
-          B1: { raw: 'TRIMESTRE 1', computed: 'TRIMESTRE 1', style: { bold: true, align: 'right', bg: '#1f2937' } },
-          C1: { raw: 'TRIMESTRE 2', computed: 'TRIMESTRE 2', style: { bold: true, align: 'right', bg: '#1f2937' } },
-          D1: { raw: 'TRIMESTRE 3', computed: 'TRIMESTRE 3', style: { bold: true, align: 'right', bg: '#1f2937' } },
-          E1: { raw: 'TOTAL ANUAL', computed: 'TOTAL ANUAL', style: { bold: true, align: 'right', bg: '#374151' } },
-
-          A2: { raw: 'Infraestructura Cloud & Servidores', computed: 'Infraestructura Cloud & Servidores' },
-          B2: { raw: '14500', computed: 14500, style: { format: 'currency', align: 'right' } },
-          C2: { raw: '16200', computed: 16200, style: { format: 'currency', align: 'right' } },
-          D2: { raw: '15800', computed: 15800, style: { format: 'currency', align: 'right' } },
-          E2: { raw: '=SUM(B2:D2)', computed: 46500, style: { format: 'currency', bold: true, align: 'right', color: '#10b981' } },
-
-          A3: { raw: 'Licencias de Software & DevOps', computed: 'Licencias de Software & DevOps' },
-          B3: { raw: '8400', computed: 8400, style: { format: 'currency', align: 'right' } },
-          C3: { raw: '8900', computed: 8900, style: { format: 'currency', align: 'right' } },
-          D3: { raw: '9200', computed: 9200, style: { format: 'currency', align: 'right' } },
-          E3: { raw: '=SUM(B3:D3)', computed: 26500, style: { format: 'currency', bold: true, align: 'right', color: '#10b981' } },
-
-          A4: { raw: 'Ciberseguridad & Auditorías Externas', computed: 'Ciberseguridad & Auditorías Externas' },
-          B4: { raw: '12000', computed: 12000, style: { format: 'currency', align: 'right' } },
-          C4: { raw: '6500', computed: 6500, style: { format: 'currency', align: 'right' } },
-          D4: { raw: '14200', computed: 14200, style: { format: 'currency', align: 'right' } },
-          E4: { raw: '=SUM(B4:D4)', computed: 32700, style: { format: 'currency', bold: true, align: 'right', color: '#10b981' } },
-
-          A5: { raw: 'TOTAL GASTOS OPERATIVOS', computed: 'TOTAL GASTOS OPERATIVOS', style: { bold: true, bg: '#111827' } },
-          B5: { raw: '=SUM(B2:B4)', computed: 34900, style: { format: 'currency', bold: true, align: 'right' } },
-          C5: { raw: '=SUM(C2:C4)', computed: 31600, style: { format: 'currency', bold: true, align: 'right' } },
-          D5: { raw: '=SUM(D2:D4)', computed: 39200, style: { format: 'currency', bold: true, align: 'right' } },
-          E5: { raw: '=SUM(E2:E4)', computed: 105700, style: { format: 'currency', bold: true, align: 'right', color: '#38bdf8' } },
-
-          A7: { raw: 'PROMEDIO TRIMESTRAL', computed: 'PROMEDIO TRIMESTRAL', style: { italic: true } },
-          B7: { raw: '=AVERAGE(B5:D5)', computed: 35233.33, style: { format: 'currency', align: 'right' } },
-        },
+        name: 'Hoja 1',
+        rowCount: 40,
+        colCount: 20,
+        cells: {},
       },
     ],
   },
@@ -222,229 +167,25 @@ const INITIAL_SHEETS: SpreadsheetItem[] = [
 const INITIAL_DECKS: SlideDeckItem[] = [
   {
     id: 'deck-1',
-    title: 'Apex Suite • Presentación de Producto y Estrategia Q4',
+    title: 'Presentación 1',
     aspectRatio: '16:9',
-    lastModified: Date.now() - 3600 * 1000 * 3,
+    lastModified: Date.now(),
     slides: [
       {
         id: 'sl-1',
         background: '#0c0e12',
-        notes: 'Bienvenida al equipo. Enfatizar la velocidad de carga de 280ms y la erradicación del Ribbon saturado.',
-        elements: [
-          {
-            id: 'el-1',
-            type: 'badge',
-            x: 10,
-            y: 18,
-            width: 25,
-            height: 6,
-            content: 'NUEVA GENERACIÓN OPEN SOURCE',
-            bg: '#3b82f6',
-            color: '#ffffff',
-          },
-          {
-            id: 'el-2',
-            type: 'title',
-            x: 10,
-            y: 28,
-            width: 80,
-            height: 20,
-            content: 'Apex Office Suite',
-            subtitle: 'La suite ofimática ultra-ligera, segura y modular diseñada para el futuro.',
-            fontSize: 48,
-            color: '#f8fafc',
-          },
-          {
-            id: 'el-3',
-            type: 'stat',
-            x: 10,
-            y: 62,
-            width: 24,
-            height: 22,
-            content: '< 280 ms',
-            subtitle: 'Arranque en frío (Cold Start)',
-            color: '#10b981',
-          },
-          {
-            id: 'el-4',
-            type: 'stat',
-            x: 38,
-            y: 62,
-            width: 24,
-            height: 22,
-            content: '45 MB',
-            subtitle: 'Consumo de RAM en reposo',
-            color: '#38bdf8',
-          },
-          {
-            id: 'el-5',
-            type: 'stat',
-            x: 66,
-            y: 62,
-            width: 24,
-            height: 22,
-            content: '0 DDE',
-            subtitle: 'Inmunidad a inyección de código',
-            color: '#f43f5e',
-          },
-        ],
-      },
-      {
-        id: 'sl-2',
-        background: '#0c0e12',
-        notes: 'Detallar los 5 módulos integrados: Writer, Calc, Slides, DataVault y Agenda.',
-        elements: [
-          {
-            id: 'el-20',
-            type: 'title',
-            x: 10,
-            y: 12,
-            width: 80,
-            height: 15,
-            content: 'Los 5 Pilares de Apex Suite',
-            subtitle: 'Una sola aplicación unificada sin silos tecnológicos ni macros vulnerables.',
-            fontSize: 32,
-            color: '#f8fafc',
-          },
-          {
-            id: 'el-21',
-            type: 'shape',
-            x: 10,
-            y: 35,
-            width: 38,
-            height: 25,
-            content: '📝 Apex Writer',
-            subtitle: 'Motor de texto enriquecido con paginación real A4 y exportación PDF/DOCX limpia.',
-            bg: '#161a22',
-          },
-          {
-            id: 'el-22',
-            type: 'shape',
-            x: 52,
-            y: 35,
-            width: 38,
-            height: 25,
-            content: '📊 Apex Calc',
-            subtitle: 'Hoja de cálculo con grafo DAG reactivo y ordenación topológica instantánea.',
-            bg: '#161a22',
-          },
-          {
-            id: 'el-23',
-            type: 'shape',
-            x: 10,
-            y: 65,
-            width: 38,
-            height: 25,
-            content: '🗄️ Apex DataVault',
-            subtitle: 'Base de datos relacional SQLite WASM local de alta velocidad (Rival de Access).',
-            bg: '#161a22',
-          },
-          {
-            id: 'el-24',
-            type: 'shape',
-            x: 52,
-            y: 65,
-            width: 38,
-            height: 25,
-            content: '📅 Apex Agenda & Mail',
-            subtitle: 'Organizador de tareas, reuniones y comunicaciones sin telemetría corporativa.',
-            bg: '#161a22',
-          },
-        ],
+        notes: '',
+        elements: [],
       },
     ],
   },
 ];
 
-const INITIAL_TABLES: VaultTable[] = [
-  {
-    id: 'tbl-1',
-    name: 'Inventario de Servidores & Activos',
-    description: 'Registro de infraestructura de producción, latencias y sistemas operativos asignados.',
-    icon: 'Server',
-    fields: [
-      { id: 'f-hostname', name: 'Hostname', type: 'text', required: true },
-      { id: 'f-ip', name: 'Dirección IP', type: 'text', required: true },
-      { id: 'f-role', name: 'Rol Primario', type: 'badge', options: ['Gateway API', 'Database Primary', 'Edge Cache', 'Worker Node'] },
-      { id: 'f-ram', name: 'RAM (GB)', type: 'number' },
-      { id: 'f-status', name: 'Estado Operativo', type: 'badge', options: ['Activo', 'Mantenimiento', 'Backup'] },
-      { id: 'f-active', name: 'Cifrado E2EE', type: 'boolean' },
-    ],
-    records: [
-      { id: 'r-1', 'f-hostname': 'srv-frankfurt-01', 'f-ip': '10.0.12.4', 'f-role': 'Gateway API', 'f-ram': 64, 'f-status': 'Activo', 'f-active': true },
-      { id: 'r-2', 'f-hostname': 'db-cluster-master', 'f-ip': '10.0.15.2', 'f-role': 'Database Primary', 'f-ram': 256, 'f-status': 'Activo', 'f-active': true },
-      { id: 'r-3', 'f-hostname': 'edge-cache-madrid', 'f-ip': '10.0.18.9', 'f-role': 'Edge Cache', 'f-ram': 32, 'f-status': 'Activo', 'f-active': true },
-      { id: 'r-4', 'f-hostname': 'worker-batch-gpu', 'f-ip': '10.0.22.7', 'f-role': 'Worker Node', 'f-ram': 128, 'f-status': 'Mantenimiento', 'f-active': false },
-    ],
-  },
-];
+const INITIAL_TABLES: VaultTable[] = [];
 
-const INITIAL_EVENTS: AgendaEvent[] = [
-  {
-    id: 'ev-1',
-    title: 'Revisión de Arquitectura del Motor Calc (DAG)',
-    date: '2026-10-14',
-    time: '14:30',
-    durationMin: 45,
-    category: 'ops',
-    description: 'Comprobar el benchmark del algoritmo de Kahn para 500.000 celdas reactivas.',
-    completed: true,
-  },
-  {
-    id: 'ev-2',
-    title: 'Auditoría de Penetración y Sanitizador DDE',
-    date: '2026-10-14',
-    time: '16:00',
-    durationMin: 60,
-    category: 'review',
-    description: 'Verificar el bloqueo de inyección en archivos CSV y deconstrucción de macros.',
-    completed: false,
-  },
-  {
-    id: 'ev-3',
-    title: 'Entrega de Release Candidate v1.0 Apex Suite',
-    date: '2026-10-15',
-    time: '10:00',
-    durationMin: 30,
-    category: 'deadline',
-    description: 'Generación del binario compilado y verificación en entorno local.',
-    completed: false,
-  },
-];
+const INITIAL_EVENTS: AgendaEvent[] = [];
 
-const INITIAL_MAILS: MailMessage[] = [
-  {
-    id: 'mail-1',
-    from: 'security@apex-suite.org',
-    to: 'dev-team@apex-suite.org',
-    subject: 'Reporte de Auditoría: Zero-Trust y Sandbox WASM Verificados',
-    snippet: 'Se ha completado con éxito la validación del parser XML sin DTDs externas...',
-    body: `Estimado equipo,
-
-Confirmamos que todos los vectores de ataque analizados (inyección de fórmulas DDE, bombas ZIP y fuga de rutas UNC) han sido neutralizados de forma permanente en la capa de deserialización.
-
-El módulo Privacy Stripper está listo para producción.
-
-Saludos cordiales,
-Equipo de Seguridad Ofensiva`,
-    date: '10:24',
-    isRead: false,
-    isStarred: true,
-    folder: 'inbox',
-  },
-  {
-    id: 'mail-2',
-    from: 'performance@apex-suite.org',
-    to: 'dev-team@apex-suite.org',
-    subject: 'Métricas de Arranque: <280ms en Windows 11',
-    snippet: 'Los tests de Cold Start han batido todos los récords anteriores...',
-    body: `El empaquetado optimizado mediante Webview2 nativa y eliminación de VSTO y COM pesadas sitúa a Apex Suite como la más rápida del mercado.`,
-    date: 'Ayer',
-    isRead: true,
-    isStarred: false,
-    folder: 'inbox',
-  },
-];
+const INITIAL_MAILS: MailMessage[] = [];
 
 const PRO_LICENSE_HASHES = new Set([
   '28e8e57c01b240bcaa33c1de6e2cf8181966af8ec43eff5f696d615a4d8f1772', // APEX-PRO-2026
@@ -890,7 +631,7 @@ export const useOfficeStore = create<OfficeState>()(
 
   // 4. Vault Database
   tables: INITIAL_TABLES,
-  activeTableId: 'tbl-1',
+  activeTableId: '',
   setActiveTable: (id) => set({ activeTableId: id }),
   addRecord: (tableId, record) =>
     set((state) => ({
@@ -914,9 +655,7 @@ export const useOfficeStore = create<OfficeState>()(
         { id: 'categoria', name: 'Categoría', type: 'text' },
         { id: 'valor', name: 'Valor Numérico', type: 'number' },
       ],
-      records: [
-        { id: 'r-1', nombre: 'Elemento Alfa', categoria: 'General', valor: 150 },
-      ],
+      records: [],
     };
     set((state) => ({
       tables: [...state.tables, newTbl],
@@ -1074,7 +813,7 @@ export const useOfficeStore = create<OfficeState>()(
   },
     }),
     {
-      name: 'apex-office-state-v1',
+      name: 'apex-office-state-v2',
       partialize: (state) => ({
         currentModule: state.currentModule,
         theme: state.theme,

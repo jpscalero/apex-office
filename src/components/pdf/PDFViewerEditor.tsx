@@ -110,165 +110,29 @@ export interface PDFPageContent {
   ocrBoxes: OCRBoundingBox[];
 }
 
-// Initial Multi-page Corporate Legal Document Data
+// Initial Blank PDF Page (Zero Emulation / Zero Mock Corporate Text)
 const INITIAL_PAGES: PDFPageContent[] = [
   {
     pageNumber: 1,
-    headerTitle: 'APEX DEFENSE & CYBERSECURITY SYSTEMS S.L.',
-    headerSubtitle: 'PROTOCOLO DE SEGURIDAD NACIONAL • ACUERDO DE TRANSFERENCIA TECNOLÓGICA & NDA',
-    classificationBadge: 'TOP SECRET // CLASIFICACIÓN MÁXIMA NIVEL 4',
+    headerTitle: "Documento PDF en Blanco",
+    headerSubtitle: "Lienzo listo para visualización, anotaciones y firmas digitales",
+    classificationBadge: "DOCUMENTO LIMPIO",
     clauses: [
       {
-        id: 'c1-p1',
-        clauseTitle: '1. COMPARECENCIA Y REUNIDOS',
+        id: "c1-blank",
+        clauseTitle: "",
         segments: [
-          { id: 's1', text: 'En la ciudad de Madrid, a ', isSensitive: false },
-          { id: 's2', text: '14 de Octubre de 2026', isSensitive: false },
-          { id: 's3', text: ', comparecen de una parte: ', isSensitive: false },
-          { id: 's4', text: 'Dña. Elena Valenzuela Morán', isSensitive: true, sensitiveType: 'confidential_name', sensitiveLabel: 'NOMBRE ALTO CARGO' },
-          { id: 's5', text: ', titular del Documento Nacional de Identidad ', isSensitive: false },
-          { id: 's6', text: '47.892.104-K', isSensitive: true, sensitiveType: 'dni', sensitiveLabel: 'DNI / NIF PERSONAL' },
-          { id: 's7', text: ', actuando en nombre y representación de APEX DEFENSE CORP con C.I.F. ', isSensitive: false },
-          { id: 's8', text: 'B-84920194', isSensitive: true, sensitiveType: 'dni', sensitiveLabel: 'CIF FISCAL CORPORATIVO' },
-          { id: 's9', text: '; y de otra parte: ', isSensitive: false },
-          { id: 's10', text: 'D. Marcos Benítez Sotomayor', isSensitive: true, sensitiveType: 'confidential_name', sensitiveLabel: 'INVESTIGADOR CUÁNTICO' },
-          { id: 's11', text: ' con documento de identidad ', isSensitive: false },
-          { id: 's12', text: '52.331.908-T', isSensitive: true, sensitiveType: 'dni', sensitiveLabel: 'DNI INVESTIGADOR' },
-          { id: 's13', text: ', en calidad de Director Técnico de Criptoanálisis.', isSensitive: false },
-        ],
-      },
-      {
-        id: 'c1-p2',
-        clauseTitle: '2. CUENTAS FINANCIERAS Y FONDOS DE OPERACIONES CLASIFICADAS',
-        segments: [
-          { id: 's14', text: 'Los honorarios y gastos de investigación se liquidarán en la cuenta bancaria restringida con código internacional IBAN: ', isSensitive: false },
-          { id: 's15', text: 'ES76 2100 0418 45 0200051382', isSensitive: true, sensitiveType: 'iban', sensitiveLabel: 'IBAN BANCARIO CONFIDENCIAL' },
-          { id: 's16', text: ', vinculada a la tarjeta corporativa de contingencia ', isSensitive: false },
-          { id: 's17', text: 'VISA PLATINUM 4532-8821-9043-1184', isSensitive: true, sensitiveType: 'credit_card', sensitiveLabel: 'TARJETA BANCARIA SEGURA' },
-          { id: 's18', text: '. Todo desembolso superior a 50.000€ exigirá autorización multifactorial con token de hardware físico.', isSensitive: false },
-        ],
-      },
-      {
-        id: 'c1-p3',
-        clauseTitle: '3. UBICACIÓN FÍSICA DEL BÚNKER DE DATOS (NIVEL TIER IV)',
-        segments: [
-          { id: 's19', text: 'El hardware criptográfico y los clústeres cuánticos se encuentran alojados en la instalación blindada sita en: ', isSensitive: false },
-          { id: 's20', text: 'Calle Fortuny 14, Planta Subsuelo -2, 28010 Madrid', isSensitive: true, sensitiveType: 'address', sensitiveLabel: 'UBICACIÓN FÍSICA SECRETA' },
-          { id: 's21', text: '. El acceso físico requiere doble verificación biométrica y custodia armada 24/7.', isSensitive: false },
+          {
+            id: "s1-blank",
+            text: "Documento PDF en blanco. Utiliza las herramientas de la barra superior para agregar anotaciones, campos de formulario AcroForms o aplicar sellos de firma digital cualificada.",
+            isSensitive: false,
+          },
         ],
       },
     ],
-    textFields: [
-      { id: 'f-p1-declarante', label: 'Nombre Completo del Declarante', value: 'Elena Valenzuela Morán', placeholder: 'Introduzca nombre completo...', required: true },
-      { id: 'f-p1-cargo', label: 'Cargo Oficial en Apex Defense', value: 'Directora General de Operaciones y Seguridad', placeholder: 'Ej. Director de Seguridad' },
-      { id: 'f-p1-expediente', label: 'Código de Expediente Clasificado', value: 'EXP-APX-2026-Q4-0089', placeholder: 'EXP-XXXX-...' },
-    ],
-    checkboxes: [
-      { id: 'cb-p1-nda', label: 'Acepto el compromiso de no divulgación de secretos industriales (Pena de 2.000.000€)', checked: true, required: true },
-      { id: 'cb-p1-eidas', label: 'Sometimiento expreso a la directiva europea eIDAS y Esquema Nacional de Seguridad (ENS)', checked: true },
-    ],
-    ocrBoxes: [
-      { id: 'ocr-1', text: 'APEX DEFENSE & CYBERSECURITY SYSTEMS S.L.', x: 10, y: 7, width: 80, height: 3.5, confidence: 99.8, lineIndex: 1 },
-      { id: 'ocr-2', text: 'PROTOCOLO DE SEGURIDAD NACIONAL • ACUERDO DE TRANSFERENCIA', x: 14, y: 11, width: 72, height: 2.5, confidence: 99.4, lineIndex: 2 },
-      { id: 'ocr-3', text: '1. COMPARECENCIA Y REUNIDOS En la ciudad de Madrid', x: 10, y: 22, width: 80, height: 2.8, confidence: 99.1, lineIndex: 3 },
-      { id: 'ocr-4', text: 'Elena Valenzuela Morán DNI 47.892.104-K APEX DEFENSE CORP', x: 10, y: 27, width: 80, height: 3.2, confidence: 98.7, lineIndex: 4 },
-      { id: 'ocr-5', text: '2. CUENTAS FINANCIERAS IBAN ES76 2100 0418 45 0200051382', x: 10, y: 44, width: 80, height: 3.2, confidence: 99.5, lineIndex: 5 },
-      { id: 'ocr-6', text: 'VISA PLATINUM 4532-8821-9043-1184 DESEMBOLSO MULTIFACTORIAL', x: 10, y: 50, width: 80, height: 3.0, confidence: 98.9, lineIndex: 6 },
-      { id: 'ocr-7', text: '3. UBICACIÓN BÚNKER Fortuny 14 Planta Subsuelo -2 Madrid', x: 10, y: 62, width: 80, height: 3.2, confidence: 99.2, lineIndex: 7 },
-    ],
-  },
-  {
-    pageNumber: 2,
-    headerTitle: 'APEX DEFENSE & CYBERSECURITY SYSTEMS S.L.',
-    headerSubtitle: 'ANEXO TÉCNICO • GESTIÓN DE CLAVES MAESTRAS HSM & ACCESO A SERVIDORES',
-    classificationBadge: 'CONFIDENCIAL // NIVEL CRÍTICO INFRAESTRUCTURA',
-    clauses: [
-      {
-        id: 'c2-p1',
-        clauseTitle: '4. CLAVES MAESTRAS DE CIFRADO Y MÓDULOS HSM',
-        segments: [
-          { id: 's22', text: 'La raíz de confianza de los módulos de seguridad de hardware (HSM Thales Luna) se inicializó con la clave maestra secreta: ', isSensitive: false },
-          { id: 's23', text: '0x7F4B92AE09C14D5E881B77A0F2C84', isSensitive: true, sensitiveType: 'hsm_key', sensitiveLabel: 'CLAVE MAESTRA HSM PRIVADA' },
-          { id: 's24', text: '. Dicha clave queda fragmentada bajo el esquema de Shamir (3 de 5 custodios).', isSensitive: false },
-        ],
-      },
-      {
-        id: 'c2-p2',
-        clauseTitle: '5. TOKENS DE SERVICIOS PRODUCTIVOS Y CREDENCIALES',
-        segments: [
-          { id: 's25', text: 'Para la sincronización con el enjambre de microservicios, el token de autenticación API en producción es: ', isSensitive: false },
-          { id: 's26', text: 'apex_sec_live_99d1fa4482a1bb902e457', isSensitive: true, sensitiveType: 'api_token', sensitiveLabel: 'API TOKEN SECRETO LIVE' },
-          { id: 's27', text: '. Queda prohibido el almacenamiento en texto plano o repositorio de control de versiones público.', isSensitive: false },
-        ],
-      },
-      {
-        id: 'c2-p3',
-        clauseTitle: '6. CONTROL BIOMÉTRICO Y REGISTRO DE ACCESOS',
-        segments: [
-          { id: 's28', text: 'El identificador de acceso biométrico de emergencia otorgado al personal auditor es: ', isSensitive: false },
-          { id: 's29', text: 'BIO-LEVEL-5-ALPHA-9921', isSensitive: true, sensitiveType: 'biometric', sensitiveLabel: 'ID BIOMÉTRICO AUDITORÍA' },
-          { id: 's30', text: ', emitido bajo la supervisión directa del auditor forense.', isSensitive: false },
-        ],
-      },
-    ],
-    textFields: [
-      { id: 'f-p2-acreditacion', label: 'Nivel de Habilitación de Seguridad', value: 'Nivel 5 • Secreto Especial OTAN/CEN', placeholder: 'Nivel de acreditación...' },
-      { id: 'f-p2-auditor', label: 'Auditor Criptográfico Certificado', value: 'Dr. Santiago Ramos Cifuentes', placeholder: 'Nombre del auditor...' },
-    ],
-    checkboxes: [
-      { id: 'cb-p2-shred', label: 'Activación de purgado forzoso (Zero-Byte Overwrite) en caso de intrusión detectada', checked: true },
-      { id: 'cb-p2-audit', label: 'Registro inmutable de logs en bóveda segura con hash SHA-512 encadenado', checked: true },
-    ],
-    ocrBoxes: [
-      { id: 'ocr-8', text: 'ANEXO TÉCNICO GESTIÓN DE CLAVES MAESTRAS HSM', x: 12, y: 11, width: 76, height: 2.6, confidence: 99.6, lineIndex: 8 },
-      { id: 'ocr-9', text: '4. CLAVES MAESTRAS Thales Luna 0x7F4B92AE09C14D5E881B77A0F2C84', x: 10, y: 24, width: 80, height: 3.2, confidence: 98.4, lineIndex: 9 },
-      { id: 'ocr-10', text: '5. TOKENS DE SERVICIOS apex_sec_live_99d1fa4482a1bb902e457', x: 10, y: 42, width: 80, height: 3.0, confidence: 99.1, lineIndex: 10 },
-      { id: 'ocr-11', text: '6. CONTROL BIOMÉTRICO BIO-LEVEL-5-ALPHA-9921 SUPERVISIÓN', x: 10, y: 58, width: 80, height: 2.8, confidence: 99.0, lineIndex: 11 },
-    ],
-  },
-  {
-    pageNumber: 3,
-    headerTitle: 'APEX DEFENSE & CYBERSECURITY SYSTEMS S.L.',
-    headerSubtitle: 'DILIGENCIA DE CIERRE • FIRMA DIGITAL CUALIFICADA & SELLO FORENSE',
-    classificationBadge: 'CERTIFICACIÓN eIDAS QES • VALIDEZ JURÍDICA PLENA',
-    clauses: [
-      {
-        id: 'c3-p1',
-        clauseTitle: '7. CONFORMIDAD Y RATIFICACIÓN JURÍDICA',
-        segments: [
-          { id: 's31', text: 'Leído el presente instrumento y enteradas las partes de su contenido y alcance legal, prestan su conformidad y ratificación plena. De acuerdo con el Reglamento (UE) Nº 910/2014 (eIDAS), la firma electrónica estampada a continuación surte los mismos efectos jurídicos que la firma manuscrita.', isSensitive: false },
-        ],
-      },
-      {
-        id: 'c3-p2',
-        clauseTitle: '8. AUDITORÍA FORENSE Y CADENA DE CUSTODIA',
-        segments: [
-          { id: 's32', text: 'El documento queda sellado mediante función hash irreversible SHA-256 con sellado de tiempo cualificado RFC-3161 emitido por la Autoridad de Certificación de Apex Trust Services.', isSensitive: false },
-        ],
-      },
-    ],
-    textFields: [
-      { id: 'f-p3-ciudad', label: 'Lugar de Ratificación', value: 'Madrid, Sede Central de Ciberdefensa', placeholder: 'Ciudad...' },
-      { id: 'f-p3-fecha', label: 'Fecha de Entrada en Vigor', value: '14 de Octubre de 2026, 12:00:00 UTC', placeholder: 'Fecha...' },
-    ],
-    checkboxes: [
-      { id: 'cb-p3-custodia', label: 'Certifico la custodia íntegra sin copias intermedias ni almacenamiento no cifrado', checked: true },
-    ],
-    signatureData: {
-      isSigned: true,
-      signerName: 'Elena Valenzuela Morán',
-      signerTitle: 'Directora General de Operaciones y Seguridad',
-      signedAt: '14/10/2026 12:15:42 UTC',
-      certificateId: 'ES-FNMT-QES-2026-994102-K',
-      algorithm: 'RSA-4096 / SHA-256 (eIDAS QES)',
-      documentHash: 'a7c93e4bf120d885a089912be21cf0e47854191d90c9b0e1291840ef7bc329a1',
-    },
-    ocrBoxes: [
-      { id: 'ocr-12', text: 'DILIGENCIA DE CIERRE FIRMA DIGITAL CUALIFICADA', x: 12, y: 11, width: 76, height: 2.6, confidence: 99.7, lineIndex: 12 },
-      { id: 'ocr-13', text: '7. CONFORMIDAD Y RATIFICACIÓN JURÍDICA REGLAMENTO eIDAS 910/2014', x: 10, y: 22, width: 80, height: 3.2, confidence: 99.3, lineIndex: 13 },
-      { id: 'ocr-14', text: '8. AUDITORÍA FORENSE CADENA DE CUSTODIA SHA-256 RFC-3161', x: 10, y: 38, width: 80, height: 3.0, confidence: 98.8, lineIndex: 14 },
-      { id: 'ocr-15', text: 'RECUADRO DE FIRMA DIGITAL Y SELLO CRIPTOGRÁFICO', x: 10, y: 55, width: 80, height: 3.5, confidence: 99.6, lineIndex: 15 },
-    ],
+    textFields: [],
+    checkboxes: [],
+    ocrBoxes: [],
   },
 ];
 

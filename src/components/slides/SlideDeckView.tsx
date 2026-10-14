@@ -854,6 +854,17 @@ export const SlideDeckView: React.FC = () => {
               <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
 
               {/* Render Elements inside Slide */}
+              {currentSlide?.elements.length === 0 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center pointer-events-none">
+                  <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-3 text-amber-400/60">
+                    <Tv className="w-6 h-6" />
+                  </div>
+                  <p className="text-sm font-semibold text-slate-400">Diapositiva en blanco</p>
+                  <p className="text-xs text-slate-500 mt-1 max-w-sm">
+                    Usa la pestaña &ldquo;Insertar Formas & Contenido&rdquo; superior para agregar títulos, textos, métricas o tarjetas.
+                  </p>
+                </div>
+              )}
               {currentSlide?.elements.map((el) => {
                 const isSelected = el.id === selectedElementId;
                 return (

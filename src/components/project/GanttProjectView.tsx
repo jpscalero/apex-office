@@ -379,9 +379,9 @@ export function calculateProjectCPM(tasks: ProjectTask[], baseDateStr: string): 
 // ============================================================================
 
 export const GanttProjectView: React.FC = () => {
-  // State: Tasks list & selected task
-  const [tasks, setTasks] = useState<ProjectTask[]>(INITIAL_DEMO_TASKS);
-  const [selectedTaskId, setSelectedTaskId] = useState<string | null>('T1');
+  // State: Tasks list & selected task (clean slate, zero demo emulation)
+  const [tasks, setTasks] = useState<ProjectTask[]>([]);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [hoveredTaskId, setHoveredTaskId] = useState<string | null>(null);
 
   // View configurations
@@ -975,7 +975,20 @@ export const GanttProjectView: React.FC = () => {
               onScroll={handleTableScroll}
               className="flex-1 overflow-y-auto overflow-x-auto divide-y divide-obsidian-800/60"
             >
-              {calculatedTasks.map((t, idx) => {
+              {calculatedTasks.length === 0 ? (
+                <div className="flex flex-col items-center justify-center p-12 text-slate-500 space-y-3">
+                  <Calendar className="w-10 h-10 text-slate-600" />
+                  <p className="text-xs text-slate-400">No hay tareas creadas en este cronograma.</p>
+                  <button
+                    onClick={handleOpenAddTask}
+                    className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium flex items-center space-x-1.5 shadow transition-all cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Crear Primera Tarea</span>
+                  </button>
+                </div>
+              ) : (
+                calculatedTasks.map((t, idx) => {
                 const isSelected = t.id === selectedTaskId;
                 const isHovered = t.id === hoveredTaskId;
                 const isMilestone = t.duration === 0;
@@ -1161,25 +1174,31 @@ export const GanttProjectView: React.FC = () => {
                     </div>
                   </div>
                 );
-              })}
-            </div>
+              })
+            )}
           </div>
-        )}
+        </div>
+      )}
 
-        {/* ================================================================== */}
-        {/* 2. RIGHT PANE: VECTORIAL INTERACTIVE SVG GANTT TIMELINE             */}
-        {/* ================================================================== */}
-        {(layout === 'split' || layout === 'gantt') && (
-          <div
-            ref={ganttContainerRef}
-            onScroll={handleGanttScroll}
-            className="flex-1 overflow-auto bg-obsidian-950 relative scroll-smooth"
+      {/* ================================================================== */}
+      {/* 2. RIGHT PANE: VECTORIAL INTERACTIVE SVG GANTT TIMELINE             */}
+      {/* ================================================================== */}
+      {(layout === 'split' || layout === 'gantt') && (
+        <div
+          ref={ganttContainerRef}
+          onScroll={handleGanttScroll}
+          className="flex-1 overflow-auto bg-obsidian-950 relative scroll-smooth"
+        >
+          {calculatedTasks.length === 0 && (
+            <div className="absolute inset-0 flex items-center justify-center text-slate-500 text-xs font-mono pointer-events-none z-10">
+              Diagrama de Gantt vacío • Agrega tareas para visualizar la ruta crítica y cronograma CPM
+            </div>
+          )}
+          <svg
+            width={svgWidth}
+            height={svgHeight}
+            className="select-none overflow-visible block"
           >
-            <svg
-              width={svgWidth}
-              height={svgHeight}
-              className="select-none overflow-visible block"
-            >
               {/* SVG Gradient & Marker Definitions */}
               <defs>
                 {/* Critical Arrow Marker */}

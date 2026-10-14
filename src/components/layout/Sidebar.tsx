@@ -248,30 +248,37 @@ export const Sidebar: React.FC = () => {
 
         {/* VAULT TABLES */}
         {currentModule === 'vault' &&
-          tables.map((tbl) => {
-            const isActive = tbl.id === activeTableId;
-            return (
-              <div
-                key={tbl.id}
-                onClick={() => setActiveTable(tbl.id)}
-                className={`p-2.5 rounded-lg cursor-pointer transition-all ${
-                  isActive
-                    ? 'bg-obsidian-800 text-white border border-cyan-500/30 shadow-sm'
-                    : 'text-slate-300 hover:bg-obsidian-900 hover:text-slate-100'
-                }`}
-              >
-                <div className="flex items-center space-x-2">
-                  <Database className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                  <p className="text-xs font-semibold truncate">{tbl.name}</p>
+          (tables.length === 0 ? (
+            <div className="p-3 text-center text-xs text-slate-500 border border-dashed border-obsidian-800 rounded-lg">
+              <Database className="w-4 h-4 mx-auto mb-1 text-slate-600" />
+              <p>Sin tablas creadas</p>
+            </div>
+          ) : (
+            tables.map((tbl) => {
+              const isActive = tbl.id === activeTableId;
+              return (
+                <div
+                  key={tbl.id}
+                  onClick={() => setActiveTable(tbl.id)}
+                  className={`p-2.5 rounded-lg cursor-pointer transition-all ${
+                    isActive
+                      ? 'bg-obsidian-800 text-white border border-cyan-500/30 shadow-sm'
+                      : 'text-slate-300 hover:bg-obsidian-900 hover:text-slate-100'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2">
+                    <Database className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                    <p className="text-xs font-semibold truncate">{tbl.name}</p>
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-1 line-clamp-1">{tbl.description}</p>
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 mt-2 font-mono">
+                    <span>{tbl.fields.length} columnas</span>
+                    <span>{tbl.records.length} registros</span>
+                  </div>
                 </div>
-                <p className="text-[10px] text-slate-400 mt-1 line-clamp-1">{tbl.description}</p>
-                <div className="flex items-center justify-between text-[10px] text-slate-400 mt-2 font-mono">
-                  <span>{tbl.fields.length} columnas</span>
-                  <span>{tbl.records.length} registros</span>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          ))}
 
         {/* AGENDA & MAIL LIST */}
         {currentModule === 'agenda' && (
@@ -302,15 +309,19 @@ export const Sidebar: React.FC = () => {
                 Eventos de Hoy
               </p>
               <div className="space-y-1">
-                {events.slice(0, 3).map((ev) => (
-                  <div key={ev.id} className="p-2 rounded bg-obsidian-900/70 border border-obsidian-800 text-xs">
-                    <p className="font-medium text-slate-200 truncate">{ev.title}</p>
-                    <div className="flex items-center justify-between text-[10px] text-slate-400 mt-1">
-                      <span>{ev.time} ({ev.durationMin}m)</span>
-                      <span className="capitalize text-indigo-400">{ev.category}</span>
+                {events.length === 0 ? (
+                  <p className="text-[11px] text-slate-500 px-1 py-1 italic">Sin eventos programados</p>
+                ) : (
+                  events.slice(0, 3).map((ev) => (
+                    <div key={ev.id} className="p-2 rounded bg-obsidian-900/70 border border-obsidian-800 text-xs">
+                      <p className="font-medium text-slate-200 truncate">{ev.title}</p>
+                      <div className="flex items-center justify-between text-[10px] text-slate-400 mt-1">
+                        <span>{ev.time} ({ev.durationMin}m)</span>
+                        <span className="capitalize text-indigo-400">{ev.category}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -326,14 +337,14 @@ export const Sidebar: React.FC = () => {
               <div className="space-y-1">
                 <div className="p-2 rounded-lg bg-obsidian-800 border border-indigo-500/30 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-white">Release Apex v1.0</span>
+                    <span className="font-semibold text-white">Cronograma Principal</span>
                     <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 font-mono">
-                      Activo
+                      WBS Activo
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-[10px] text-slate-400 mt-2 font-mono">
                     <span>CPM Automático</span>
-                    <span className="text-rose-400 font-bold">Ruta Crítica OK</span>
+                    <span className="text-emerald-400 font-bold">Ruta Crítica OK</span>
                   </div>
                 </div>
               </div>
@@ -349,7 +360,7 @@ export const Sidebar: React.FC = () => {
                     <FolderKanban className="w-3.5 h-3.5 text-indigo-400" />
                     <span>Diagrama de Gantt</span>
                   </span>
-                  <span className="text-[10px] text-slate-400">7 Tareas</span>
+                  <span className="text-[10px] text-slate-400">Gantt SVG</span>
                 </div>
                 <div className="p-1.5 rounded-md hover:bg-obsidian-900 text-slate-400 hover:text-white flex items-center space-x-2">
                   <Clock className="w-3.5 h-3.5" />
@@ -370,10 +381,10 @@ export const Sidebar: React.FC = () => {
               <div className="p-2.5 rounded-lg bg-obsidian-800 border border-rose-500/30 text-xs space-y-1">
                 <div className="flex items-center space-x-2">
                   <FileCheck className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-                  <p className="font-semibold text-white truncate">Contrato_Legal_2026.pdf</p>
+                  <p className="font-semibold text-white truncate">Documento_1.pdf</p>
                 </div>
                 <div className="flex items-center justify-between text-[10px] text-slate-400 mt-1 font-mono">
-                  <span>3 Páginas</span>
+                  <span>1 Página</span>
                   <span className="text-emerald-400 font-bold">ISO 32000-2</span>
                 </div>
               </div>

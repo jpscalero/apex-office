@@ -21,55 +21,34 @@ interface SnapshotRecord {
   diffSummary: string;
 }
 
-const DEMO_SNAPSHOTS: SnapshotRecord[] = [
+const INITIAL_SNAPSHOTS: SnapshotRecord[] = [
   {
     id: 'snap-1',
-    timestamp: '2026-10-14 14:35:10',
-    relativeTime: 'Hace 5 minutos (Actual)',
-    author: 'Elena Rostova (Lead Security)',
-    hash: 'a9f24e18b04c8f2b',
-    message: 'Implementación de protocolo Zero-Trust y neutralización de DDE',
-    linesAdded: 24,
-    linesRemoved: 4,
-    diffSummary: '+ Adición de directiva DDE Disable en Calc\n- Supresión de llamadas OLE heredadas',
-  },
-  {
-    id: 'snap-2',
-    timestamp: '2026-10-14 13:20:44',
-    relativeTime: 'Hace 1 hora',
-    author: 'Carlos Mendoza (System Arch)',
-    hash: 'c83d19f5a7092e10',
-    message: 'Configuración de particionamiento columnar y sparse arrays',
-    linesAdded: 86,
-    linesRemoved: 12,
-    diffSummary: '+ sparse matrix TypedArrays Float64\n- arrays multidimensionales tradicionales',
-  },
-  {
-    id: 'snap-3',
-    timestamp: '2026-10-14 11:15:02',
-    relativeTime: 'Hace 3 horas',
-    author: 'Elena Rostova (Lead Security)',
-    hash: 'fa027b4481d9603c',
-    message: 'Auditoría inicial de metadatos y sellado PAdES',
-    linesAdded: 45,
+    timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19),
+    relativeTime: 'Estado Inicial',
+    author: 'Usuario Local',
+    hash: 'a1b2c3d4e5f60718',
+    message: 'Creación del espacio de trabajo en blanco',
+    linesAdded: 0,
     linesRemoved: 0,
-    diffSummary: '+ Módulo de sellado de tiempo RFC 3161\n+ Limpiador de identificadores RSID',
+    diffSummary: '+ Espacio de trabajo inicial limpio',
   },
 ];
 
 export const TimeMachineDrawer: React.FC = () => {
   const { isTimeMachineOpen, toggleTimeMachine } = useOfficeStore();
 
-  const [selectedSnapshot, setSelectedSnapshot] = useState<SnapshotRecord>(DEMO_SNAPSHOTS[0]);
+  const [snapshots] = useState<SnapshotRecord[]>(INITIAL_SNAPSHOTS);
+  const [selectedSnapshot, setSelectedSnapshot] = useState<SnapshotRecord>(INITIAL_SNAPSHOTS[0]);
   const [sliderIndex, setSliderIndex] = useState(0);
-  const [activeBranch, setActiveBranch] = useState<'main' | 'revision-legal' | 'auditoria-q4'>('main');
+  const [activeBranch, setActiveBranch] = useState<'main' | 'revision' | 'auditoria'>('main');
 
   if (!isTimeMachineOpen) return null;
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const idx = Number(e.target.value);
     setSliderIndex(idx);
-    setSelectedSnapshot(DEMO_SNAPSHOTS[idx] || DEMO_SNAPSHOTS[0]);
+    setSelectedSnapshot(snapshots[idx] || snapshots[0]);
   };
 
   const handleRestore = () => {
@@ -111,7 +90,7 @@ export const TimeMachineDrawer: React.FC = () => {
           <span className="font-medium">Rama:</span>
         </div>
         <div className="flex space-x-1">
-          {(['main', 'revision-legal', 'auditoria-q4'] as const).map((branch) => (
+          {(['main', 'revision', 'auditoria'] as const).map((branch) => (
             <button
               key={branch}
               onClick={() => setActiveBranch(branch)}
@@ -141,7 +120,7 @@ export const TimeMachineDrawer: React.FC = () => {
         <input
           type="range"
           min="0"
-          max={DEMO_SNAPSHOTS.length - 1}
+          max={Math.max(0, snapshots.length - 1)}
           step="1"
           value={sliderIndex}
           onChange={handleSliderChange}
@@ -214,7 +193,7 @@ export const TimeMachineDrawer: React.FC = () => {
           <span className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider block">
             Historial de Commits Firmados
           </span>
-          {DEMO_SNAPSHOTS.map((snap, i) => (
+          {snapshots.map((snap, i) => (
             <div
               key={snap.id}
               onClick={() => {

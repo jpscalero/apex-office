@@ -26,7 +26,9 @@ import {
   Zap,
   Terminal,
   ShieldCheck,
+  Upload,
 } from 'lucide-react';
+import { useOfficeStore } from '../../store/useOfficeStore';
 
 // ==========================================
 // TYPES & DATA STRUCTURES
@@ -81,67 +83,16 @@ export interface CustomWidget {
   measure: string;
 }
 
-// ==========================================
-// RAW REPOSITORY DATA (Simulating OLAP Warehouse)
-// ==========================================
-const RAW_SALES_DATA: BISaleRecord[] = [
-  // Q1-25
-  { id: '1', quarter: 'Q1-25', region: 'EMEA', channel: 'Enterprise Direct', product: 'Apex Enterprise Cloud', category: 'Cloud OLAP', units: 140, revenue: 420000, cost: 260000, clientCount: 1400, p99LatencyMs: 10.4 },
-  { id: '2', quarter: 'Q1-25', region: 'AMER', channel: 'SaaS Self-Serve', product: 'Apex AI Copilot Engine', category: 'AI Tools', units: 310, revenue: 380000, cost: 220000, clientCount: 2200, p99LatencyMs: 11.2 },
-  { id: '3', quarter: 'Q1-25', region: 'APAC', channel: 'Partners/Resellers', product: 'Apex Data Lakehouse', category: 'Storage', units: 95, revenue: 210000, cost: 135000, clientCount: 950, p99LatencyMs: 9.8 },
-  { id: '4', quarter: 'Q1-25', region: 'LATAM', channel: 'Gov/Public', product: 'Apex Security Sentinel', category: 'Security', units: 60, revenue: 140000, cost: 98000, clientCount: 420, p99LatencyMs: 12.1 },
-
-  // Q2-25
-  { id: '5', quarter: 'Q2-25', region: 'EMEA', channel: 'SaaS Self-Serve', product: 'Apex AI Copilot Engine', category: 'AI Tools', units: 360, revenue: 450000, cost: 265000, clientCount: 2700, p99LatencyMs: 11.0 },
-  { id: '6', quarter: 'Q2-25', region: 'AMER', channel: 'Enterprise Direct', product: 'Apex Enterprise Cloud', category: 'Cloud OLAP', units: 210, revenue: 630000, cost: 380000, clientCount: 1900, p99LatencyMs: 10.8 },
-  { id: '7', quarter: 'Q2-25', region: 'APAC', channel: 'Gov/Public', product: 'Apex Security Sentinel', category: 'Security', units: 85, revenue: 195000, cost: 130000, clientCount: 610, p99LatencyMs: 11.5 },
-  { id: '8', quarter: 'Q2-25', region: 'LATAM', channel: 'Partners/Resellers', product: 'Apex Data Lakehouse', category: 'Storage', units: 75, revenue: 165000, cost: 110000, clientCount: 520, p99LatencyMs: 10.1 },
-
-  // Q3-25
-  { id: '9', quarter: 'Q3-25', region: 'EMEA', channel: 'Enterprise Direct', product: 'Apex Developer SDK', category: 'Dev Tools', units: 190, revenue: 310000, cost: 180000, clientCount: 1600, p99LatencyMs: 9.9 },
-  { id: '10', quarter: 'Q3-25', region: 'AMER', channel: 'Partners/Resellers', product: 'Apex Enterprise Cloud', category: 'Cloud OLAP', units: 175, revenue: 520000, cost: 315000, clientCount: 1450, p99LatencyMs: 10.5 },
-  { id: '11', quarter: 'Q3-25', region: 'APAC', channel: 'SaaS Self-Serve', product: 'Apex AI Copilot Engine', category: 'AI Tools', units: 240, revenue: 320000, cost: 190000, clientCount: 1800, p99LatencyMs: 12.4 },
-  { id: '12', quarter: 'Q3-25', region: 'LATAM', channel: 'Enterprise Direct', product: 'Apex Security Sentinel', category: 'Security', units: 70, revenue: 175000, cost: 115000, clientCount: 480, p99LatencyMs: 11.8 },
-
-  // Q4-25
-  { id: '13', quarter: 'Q4-25', region: 'EMEA', channel: 'Gov/Public', product: 'Apex Enterprise Cloud', category: 'Cloud OLAP', units: 160, revenue: 490000, cost: 300000, clientCount: 1200, p99LatencyMs: 10.2 },
-  { id: '14', quarter: 'Q4-25', region: 'AMER', channel: 'Enterprise Direct', product: 'Apex Security Sentinel', category: 'Security', units: 230, revenue: 580000, cost: 350000, clientCount: 1750, p99LatencyMs: 11.0 },
-  { id: '15', quarter: 'Q4-25', region: 'APAC', channel: 'Enterprise Direct', product: 'Apex Developer SDK', category: 'Dev Tools', units: 140, revenue: 250000, cost: 155000, clientCount: 1100, p99LatencyMs: 9.7 },
-  { id: '16', quarter: 'Q4-25', region: 'LATAM', channel: 'SaaS Self-Serve', product: 'Apex AI Copilot Engine', category: 'AI Tools', units: 120, revenue: 160000, cost: 95000, clientCount: 920, p99LatencyMs: 11.9 },
-
-  // Q1-26
-  { id: '17', quarter: 'Q1-26', region: 'EMEA', channel: 'Enterprise Direct', product: 'Apex Enterprise Cloud', category: 'Cloud OLAP', units: 240, revenue: 740000, cost: 440000, clientCount: 2100, p99LatencyMs: 10.6 },
-  { id: '18', quarter: 'Q1-26', region: 'AMER', channel: 'SaaS Self-Serve', product: 'Apex AI Copilot Engine', category: 'AI Tools', units: 480, revenue: 640000, cost: 360000, clientCount: 3800, p99LatencyMs: 11.4 },
-  { id: '19', quarter: 'Q1-26', region: 'APAC', channel: 'Partners/Resellers', product: 'Apex Data Lakehouse', category: 'Storage', units: 160, revenue: 390000, cost: 235000, clientCount: 1650, p99LatencyMs: 10.1 },
-  { id: '20', quarter: 'Q1-26', region: 'LATAM', channel: 'Gov/Public', product: 'Apex Security Sentinel', category: 'Security', units: 95, revenue: 240000, cost: 155000, clientCount: 780, p99LatencyMs: 12.0 },
-
-  // Q2-26
-  { id: '21', quarter: 'Q2-26', region: 'EMEA', channel: 'Partners/Resellers', product: 'Apex Data Lakehouse', category: 'Storage', units: 210, revenue: 520000, cost: 320000, clientCount: 1950, p99LatencyMs: 10.3 },
-  { id: '22', quarter: 'Q2-26', region: 'AMER', channel: 'Enterprise Direct', product: 'Apex Enterprise Cloud', category: 'Cloud OLAP', units: 290, revenue: 890000, cost: 530000, clientCount: 2600, p99LatencyMs: 10.9 },
-  { id: '23', quarter: 'Q2-26', region: 'APAC', channel: 'SaaS Self-Serve', product: 'Apex AI Copilot Engine', category: 'AI Tools', units: 380, revenue: 490000, cost: 285000, clientCount: 2900, p99LatencyMs: 11.7 },
-  { id: '24', quarter: 'Q2-26', region: 'LATAM', channel: 'Enterprise Direct', product: 'Apex Developer SDK', category: 'Dev Tools', units: 110, revenue: 210000, cost: 125000, clientCount: 840, p99LatencyMs: 10.8 },
-
-  // Q3-26
-  { id: '25', quarter: 'Q3-26', region: 'EMEA', channel: 'SaaS Self-Serve', product: 'Apex AI Copilot Engine', category: 'AI Tools', units: 520, revenue: 690000, cost: 395000, clientCount: 4100, p99LatencyMs: 11.1 },
-  { id: '26', quarter: 'Q3-26', region: 'AMER', channel: 'Gov/Public', product: 'Apex Security Sentinel', category: 'Security', units: 210, revenue: 620000, cost: 370000, clientCount: 1600, p99LatencyMs: 11.3 },
-  { id: '27', quarter: 'Q3-26', region: 'APAC', channel: 'Enterprise Direct', product: 'Apex Enterprise Cloud', category: 'Cloud OLAP', units: 180, revenue: 560000, cost: 340000, clientCount: 1500, p99LatencyMs: 9.6 },
-  { id: '28', quarter: 'Q3-26', region: 'LATAM', channel: 'Partners/Resellers', product: 'Apex Data Lakehouse', category: 'Storage', units: 105, revenue: 235000, cost: 145000, clientCount: 790, p99LatencyMs: 10.7 },
-
-  // Q4-26 (Projected / Closing)
-  { id: '29', quarter: 'Q4-26', region: 'EMEA', channel: 'Enterprise Direct', product: 'Apex Enterprise Cloud', category: 'Cloud OLAP', units: 310, revenue: 980000, cost: 580000, clientCount: 2800, p99LatencyMs: 10.4 },
-  { id: '30', quarter: 'Q4-26', region: 'AMER', channel: 'Enterprise Direct', product: 'Apex AI Copilot Engine', category: 'AI Tools', units: 560, revenue: 820000, cost: 460000, clientCount: 4400, p99LatencyMs: 11.2 },
-  { id: '31', quarter: 'Q4-26', region: 'APAC', channel: 'Gov/Public', product: 'Apex Security Sentinel', category: 'Security', units: 130, revenue: 380000, cost: 230000, clientCount: 1050, p99LatencyMs: 10.0 },
-  { id: '32', quarter: 'Q4-26', region: 'LATAM', channel: 'SaaS Self-Serve', product: 'Apex Developer SDK', category: 'Dev Tools', units: 145, revenue: 245000, cost: 140000, clientCount: 990, p99LatencyMs: 11.6 },
-];
 
 export const DataWarehouseBIView: React.FC = () => {
   // Navigation tabs within BI Module
   const [activeTab, setActiveTab] = useState<'dashboard' | 'duckdb' | 'etl' | 'dax'>('dashboard');
 
   // Active dataset
-  const [selectedDataset, setSelectedDataset] = useState<string>('Ventas Globales Enterprise 2026 (1.25M Filas)');
+  const [salesData, setSalesData] = useState<BISaleRecord[]>([]);
+  const [selectedDataset, setSelectedDataset] = useState<string>('Sin dataset vinculado');
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastRefreshed, setLastRefreshed] = useState<string>('Hace 2 minutos');
+  const [lastRefreshed, setLastRefreshed] = useState<string>('Sin sincronizar');
 
   // Cross-filtering states
   const [selectedRegion, setSelectedRegion] = useState<BIRegion | null>(null);
@@ -177,35 +128,27 @@ export const DataWarehouseBIView: React.FC = () => {
     sovereigntyPct: number;
     ramMB: number;
   }>({
-    rowsProcessed: '1.250.000',
-    executionTimeMs: 12.8,
+    rowsProcessed: '0',
+    executionTimeMs: 0,
     cloudRequests: 0,
     sovereigntyPct: 100,
-    ramMB: 48.6,
+    ramMB: 0,
   });
 
-  const [sqlResults, setSqlResults] = useState<Array<Record<string, string | number>>>([
-    { region: 'AMER', channel: 'Enterprise Direct', transacciones: 290, facturacion_total: '€890.000', margen_ebitda_pct: '40.45%' },
-    { region: 'EMEA', channel: 'Enterprise Direct', transacciones: 310, facturacion_total: '€980.000', margen_ebitda_pct: '40.82%' },
-    { region: 'AMER', channel: 'SaaS Self-Serve', transacciones: 560, facturacion_total: '€820.000', margen_ebitda_pct: '43.90%' },
-    { region: 'EMEA', channel: 'SaaS Self-Serve', transacciones: 520, facturacion_total: '€690.000', margen_ebitda_pct: '42.75%' },
-    { region: 'APAC', channel: 'Enterprise Direct', transacciones: 180, facturacion_total: '€560.000', margen_ebitda_pct: '39.29%' },
-    { region: 'AMER', channel: 'Gov/Public', transacciones: 210, facturacion_total: '€620.000', margen_ebitda_pct: '40.32%' },
-    { region: 'APAC', channel: 'SaaS Self-Serve', transacciones: 380, facturacion_total: '€490.000', margen_ebitda_pct: '41.84%' },
-  ]);
+  const [sqlResults, setSqlResults] = useState<Array<Record<string, string | number>>>([]);
 
   // ETL Pipeline state
   const [etlNodes, setEtlNodes] = useState<ETLNode[]>([
     {
       id: 'node-1',
       title: '1. Extract: Archivos Parquet & CSV',
-      subtitle: 'erp_sales_partitioned.parquet • 2.4 GB',
+      subtitle: 'Sin archivos en cola • 0 KB',
       category: 'extract',
-      throughput: '245k rows/seg',
-      status: 'success',
-      latency: '84 ms',
+      throughput: '0 rows/seg',
+      status: 'idle',
+      latency: '0 ms',
       details: 'Extracción sin copia de búfer mediante WebAssembly Zero-Copy Memory y File System Access API nativa.',
-      inputs: ['storage/erp_sales_2026.parquet', 'storage/clients_master.csv'],
+      inputs: [],
       outputs: ['stream::parquet_column_batch'],
     },
     {
@@ -213,10 +156,10 @@ export const DataWarehouseBIView: React.FC = () => {
       title: '2. Clean & Filter: Eliminación de Nulos',
       subtitle: 'Filtro Z-Score > 3.0 • Drop Nulls & Outliers',
       category: 'clean',
-      throughput: '410k rows/seg',
-      status: 'success',
-      latency: '42 ms',
-      details: 'Depuración vectorial SIMD: 12.430 registros corruptos o incompletos purgados sin bloquear la interfaz.',
+      throughput: '0 rows/seg',
+      status: 'idle',
+      latency: '0 ms',
+      details: 'Depuración vectorial SIMD para purgar registros corruptos o incompletos sin bloquear la interfaz.',
       inputs: ['stream::parquet_column_batch'],
       outputs: ['stream::sanitized_transactions'],
     },
@@ -225,10 +168,10 @@ export const DataWarehouseBIView: React.FC = () => {
       title: '3. Aggregate: Agrupación por Región & Canal',
       subtitle: 'SUM(revenue), AVG(margin) • Vectorized SIMD',
       category: 'aggregate',
-      throughput: '620k rows/seg',
-      status: 'success',
-      latency: '28 ms',
-      details: 'Compilación Just-In-Time de expresiones OLAP. Agrupaciones multicubo calculadas en memoria L3.',
+      throughput: '0 rows/seg',
+      status: 'idle',
+      latency: '0 ms',
+      details: 'Compilación Just-In-Time de expresiones OLAP. Agrupaciones multicubo calculadas en memoria.',
       inputs: ['stream::sanitized_transactions'],
       outputs: ['cube::regional_channel_aggregates'],
     },
@@ -237,10 +180,10 @@ export const DataWarehouseBIView: React.FC = () => {
       title: '4. Load: Almacén Local Soberano',
       subtitle: 'Native Sovereign Table • Local Cache',
       category: 'load',
-      throughput: '180k rows/seg',
-      status: 'success',
-      latency: '65 ms',
-      details: 'Persistencia directa en Almacén Local Soberano (LocalStorage). Cifrado local verificado.',
+      throughput: '0 rows/seg',
+      status: 'idle',
+      latency: '0 ms',
+      details: 'Persistencia directa en Almacén Local Soberano (LocalStorage).',
       inputs: ['cube::regional_channel_aggregates'],
       outputs: ['local://warehouse/sales_lakehouse.db'],
     },
@@ -248,7 +191,7 @@ export const DataWarehouseBIView: React.FC = () => {
 
   const [activeEtlNodeId, setActiveEtlNodeId] = useState<string>('node-1');
   const [isEtlPipelineRunning, setIsEtlPipelineRunning] = useState(false);
-  const [etlExecutionProgress, setEtlExecutionProgress] = useState<number>(100);
+  const [etlExecutionProgress, setEtlExecutionProgress] = useState<number>(0);
 
   // DAX & Expressions state
   const [daxFormula, setDaxFormula] = useState<string>(
@@ -274,7 +217,7 @@ export const DataWarehouseBIView: React.FC = () => {
       category: 'Rendimiento Temporal',
       returnType: 'Percentage',
       description: 'Crecimiento interanual compuesto calculado sobre trimestres homólogos.',
-      computedValue: '+24.8%',
+      computedValue: '-',
       status: 'valid',
     },
     {
@@ -284,7 +227,7 @@ export const DataWarehouseBIView: React.FC = () => {
       category: 'Cohortes y Clientes',
       returnType: 'Currency',
       description: 'Valor de vida estimado por cuenta empresarial activa en el repositorio.',
-      computedValue: '€38.450',
+      computedValue: '-',
       status: 'valid',
     },
     {
@@ -294,7 +237,7 @@ export const DataWarehouseBIView: React.FC = () => {
       category: 'Retención SaaS',
       returnType: 'Percentage',
       description: 'Tasa mensual de cancelación neta de licencias y suscripciones.',
-      computedValue: '1.42%',
+      computedValue: '-',
       status: 'valid',
     },
     {
@@ -304,7 +247,7 @@ export const DataWarehouseBIView: React.FC = () => {
       category: 'Rentabilidad',
       returnType: 'Percentage',
       description: 'Margen operativo ponderado antes de intereses, amortizaciones e impuestos.',
-      computedValue: '38.6%',
+      computedValue: '-',
       status: 'valid',
     },
     {
@@ -314,7 +257,7 @@ export const DataWarehouseBIView: React.FC = () => {
       category: 'Solvencia Financiera',
       returnType: 'Duration',
       description: 'Ratio de prueba ácida de cobertura de pasivos en tiempo de ejecución.',
-      computedValue: '2.14x',
+      computedValue: '-',
       status: 'valid',
     },
   ]);
@@ -328,7 +271,7 @@ export const DataWarehouseBIView: React.FC = () => {
   // CROSS-FILTERING ENGINE (Bidirectional at 60 FPS)
   // ==========================================
   const filteredData = useMemo(() => {
-    return RAW_SALES_DATA.filter((item) => {
+    return salesData.filter((item) => {
       if (selectedRegion && item.region !== selectedRegion) return false;
       if (selectedChannel && item.channel !== selectedChannel) return false;
       if (selectedQuarter && item.quarter !== selectedQuarter) return false;
@@ -357,7 +300,7 @@ export const DataWarehouseBIView: React.FC = () => {
     const regions: BIRegion[] = ['EMEA', 'AMER', 'APAC', 'LATAM'];
     return regions.map((reg) => {
       // If region is filtered, we still want to show full vs filtered comparison
-      const totalRev = RAW_SALES_DATA.filter((r) => r.region === reg && (!selectedChannel || r.channel === selectedChannel) && (!selectedQuarter || r.quarter === selectedQuarter)).reduce(
+      const totalRev = salesData.filter((r) => r.region === reg && (!selectedChannel || r.channel === selectedChannel) && (!selectedQuarter || r.quarter === selectedQuarter)).reduce(
         (sum, r) => sum + r.revenue,
         0
       );
@@ -378,13 +321,13 @@ export const DataWarehouseBIView: React.FC = () => {
   const channelSales = useMemo(() => {
     const channels: BIChannel[] = ['Enterprise Direct', 'SaaS Self-Serve', 'Partners/Resellers', 'Gov/Public'];
     const colors = ['#6366f1', '#06b6d4', '#10b981', '#f59e0b'];
-    const total = RAW_SALES_DATA.filter((r) => (!selectedRegion || r.region === selectedRegion) && (!selectedQuarter || r.quarter === selectedQuarter)).reduce(
+    const total = salesData.filter((r) => (!selectedRegion || r.region === selectedRegion) && (!selectedQuarter || r.quarter === selectedQuarter)).reduce(
       (sum, r) => sum + r.revenue,
       0
     );
 
     return channels.map((chan, idx) => {
-      const rev = RAW_SALES_DATA.filter(
+      const rev = salesData.filter(
         (r) => r.channel === chan && (!selectedRegion || r.region === selectedRegion) && (!selectedQuarter || r.quarter === selectedQuarter)
       ).reduce((sum, r) => sum + r.revenue, 0);
       const percentage = total > 0 ? (rev / total) * 100 : 0;
@@ -403,7 +346,7 @@ export const DataWarehouseBIView: React.FC = () => {
   const quarterlyTrend = useMemo(() => {
     const quarters: BIQuarter[] = ['Q1-25', 'Q2-25', 'Q3-25', 'Q4-25', 'Q1-26', 'Q2-26', 'Q3-26', 'Q4-26'];
     return quarters.map((q) => {
-      const matching = RAW_SALES_DATA.filter(
+      const matching = salesData.filter(
         (r) => r.quarter === q && (!selectedRegion || r.region === selectedRegion) && (!selectedChannel || r.channel === selectedChannel)
       );
       const rev = matching.reduce((s, r) => s + r.revenue, 0);
@@ -424,7 +367,7 @@ export const DataWarehouseBIView: React.FC = () => {
 
   // Product Table Aggregation
   const productPerformance = useMemo(() => {
-    const productNames = Array.from(new Set(RAW_SALES_DATA.map((r) => r.product)));
+    const productNames = Array.from(new Set(salesData.map((r) => r.product)));
     const items = productNames.map((name) => {
       const records = filteredData.filter((r) => r.product === name);
       const category = records[0]?.category || 'General';
@@ -477,6 +420,84 @@ export const DataWarehouseBIView: React.FC = () => {
     setSelectedQuarter(null);
   };
 
+  const handleConnectActiveSheet = () => {
+    const { spreadsheets, activeSpreadsheetId } = useOfficeStore.getState();
+    const book = spreadsheets.find((s) => s.id === activeSpreadsheetId) || spreadsheets[0];
+    const sheet = book?.sheets.find((sh) => sh.id === book.activeSheetId) || book?.sheets[0];
+    const cells = sheet?.cells || {};
+    const coords = Object.keys(cells);
+    if (coords.length === 0) {
+      alert('La hoja de cálculo activa no contiene filas de datos tabulares. Introduce valores en Apex Calc primero.');
+      return;
+    }
+    // Convert first rows
+    const imported: BISaleRecord[] = [];
+    const quarters: BIQuarter[] = ['Q1-25', 'Q2-25', 'Q3-25', 'Q4-25', 'Q1-26', 'Q2-26'];
+    const regions: BIRegion[] = ['EMEA', 'AMER', 'APAC', 'LATAM'];
+    const channels: BIChannel[] = ['Enterprise Direct', 'SaaS Self-Serve', 'Partners/Resellers', 'Gov/Public'];
+    coords.slice(0, 30).forEach((c, idx) => {
+      const val = Number(cells[c]?.computed) || Number(cells[c]?.raw) || (idx + 1) * 1500;
+      imported.push({
+        id: `sheet-${idx}`,
+        quarter: quarters[idx % quarters.length],
+        region: regions[idx % regions.length],
+        channel: channels[idx % channels.length],
+        product: `Ítem ${c}`,
+        category: 'Apex Calc Sync',
+        units: Math.max(1, Math.round(val / 100)),
+        revenue: Math.max(1000, val * 10),
+        cost: Math.max(500, val * 6),
+        clientCount: Math.max(10, Math.round(val / 50)),
+        p99LatencyMs: 10.2,
+      });
+    });
+    setSalesData(imported);
+    setSelectedDataset(`Hoja Activa: ${sheet.name} (${imported.length} Filas)`);
+    setLastRefreshed('Hace un instante');
+  };
+
+  const handleImportData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const text = ev.target?.result as string;
+        const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
+        if (lines.length < 2) {
+          alert('El archivo no contiene suficientes registros.');
+          return;
+        }
+        const imported: BISaleRecord[] = [];
+        const quarters: BIQuarter[] = ['Q1-25', 'Q2-25', 'Q3-25', 'Q4-25', 'Q1-26', 'Q2-26', 'Q3-26', 'Q4-26'];
+        const regions: BIRegion[] = ['EMEA', 'AMER', 'APAC', 'LATAM'];
+        const channels: BIChannel[] = ['Enterprise Direct', 'SaaS Self-Serve', 'Partners/Resellers', 'Gov/Public'];
+        for (let i = 1; i < lines.length; i++) {
+          const parts = lines[i].split(/[,;]/);
+          imported.push({
+            id: `row-${i}`,
+            quarter: (quarters.find((q) => q === parts[0]) || 'Q1-26') as BIQuarter,
+            region: (regions.find((r) => r === parts[1]) || 'EMEA') as BIRegion,
+            channel: (channels.find((c) => c === parts[2]) || 'Enterprise Direct') as BIChannel,
+            product: parts[3] || `Producto ${i}`,
+            category: parts[4] || 'General',
+            units: Number(parts[5]) || 10,
+            revenue: Number(parts[6]) || 5000,
+            cost: Number(parts[7]) || 2800,
+            clientCount: Number(parts[8]) || 25,
+            p99LatencyMs: Number(parts[9]) || 10.5,
+          });
+        }
+        setSalesData(imported);
+        setSelectedDataset(`${file.name} (${imported.length} Filas)`);
+        setLastRefreshed('Hace un instante');
+      } catch (err) {
+        alert('Error al procesar el archivo.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const handleRefreshData = () => {
     setIsRefreshing(true);
     setTimeout(() => {
@@ -489,15 +510,44 @@ export const DataWarehouseBIView: React.FC = () => {
     setIsExecutingSQL(true);
     setTimeout(() => {
       setIsExecutingSQL(false);
-      const randomTime = (Math.random() * 4 + 10.5).toFixed(1);
-      setSqlMetrics({
-        rowsProcessed: '1.250.000',
-        executionTimeMs: parseFloat(randomTime),
-        cloudRequests: 0,
-        sovereigntyPct: 100,
-        ramMB: parseFloat((Math.random() * 2 + 47.8).toFixed(1)),
-      });
-      setSqlResults((prev) => [...prev].sort(() => Math.random() - 0.5));
+      if (salesData.length === 0) {
+        setSqlMetrics({
+          rowsProcessed: '0',
+          executionTimeMs: 0.6,
+          cloudRequests: 0,
+          sovereigntyPct: 100,
+          ramMB: 12.0,
+        });
+        setSqlResults([]);
+      } else {
+        setSqlMetrics({
+          rowsProcessed: salesData.length.toLocaleString('es-ES'),
+          executionTimeMs: 4.8,
+          cloudRequests: 0,
+          sovereigntyPct: 100,
+          ramMB: 28.4,
+        });
+        const grouped: Record<string, { transacciones: number; facturacion: number; coste: number }> = {};
+        salesData.forEach((row) => {
+          const key = `${row.region} - ${row.channel}`;
+          if (!grouped[key]) grouped[key] = { transacciones: 0, facturacion: 0, coste: 0 };
+          grouped[key].transacciones += 1;
+          grouped[key].facturacion += row.revenue;
+          grouped[key].coste += row.cost;
+        });
+        const results = Object.entries(grouped).map(([k, v]) => {
+          const [region, channel] = k.split(' - ');
+          const margin = v.facturacion > 0 ? (((v.facturacion - v.coste) / v.facturacion) * 100).toFixed(2) + '%' : '0%';
+          return {
+            region,
+            channel,
+            transacciones: v.transacciones,
+            facturacion_total: formatCurrency(v.facturacion),
+            margen_ebitda_pct: margin,
+          };
+        });
+        setSqlResults(results);
+      }
     }, 450);
   };
 
@@ -651,10 +701,9 @@ export const DataWarehouseBIView: React.FC = () => {
               onChange={(e) => setSelectedDataset(e.target.value)}
               className="bg-obsidian-950 text-xs font-medium text-slate-200 border border-obsidian-700 rounded-md px-2.5 py-1.5 focus:outline-none focus:border-amber-500 transition-colors cursor-pointer"
             >
-              <option value="Ventas Globales Enterprise 2026 (1.25M Filas)">Ventas Globales Enterprise 2026 (1.25M Filas)</option>
-              <option value="Métricas Financieras & EBITDA 2024-2026">Métricas Financieras & EBITDA 2024-2026</option>
-              <option value="Telemetría Cloud & Rendimiento P99">Telemetría Cloud & Rendimiento P99</option>
-              <option value="Archivo Parquet Local (Local Store)">Archivo Parquet Local (Local Store)</option>
+              <option value="Sin dataset vinculado">Sin dataset vinculado</option>
+              <option value="Hoja de cálculo activa (Apex Calc)">Hoja de cálculo activa (Apex Calc)</option>
+              <option value="Archivo Parquet / CSV Local">Archivo Parquet / CSV Local</option>
             </select>
           </div>
 
@@ -784,6 +833,34 @@ export const DataWarehouseBIView: React.FC = () => {
          ========================================== */}
       {activeTab === 'dashboard' && (
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {salesData.length === 0 ? (
+            <div className="flex-1 flex flex-col items-center justify-center p-12 text-center bg-obsidian-900/40 border border-dashed border-obsidian-750 rounded-2xl my-8 space-y-4">
+              <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                <BarChart3 className="w-8 h-8" />
+              </div>
+              <div className="max-w-md">
+                <h3 className="text-base font-bold text-white mb-1.5">Tablero de Business Intelligence en Blanco</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  No hay conjuntos de datos vinculados. Importa un archivo CSV o Parquet local, o conecta tu hoja de cálculo activa en Apex Calc para generar análisis OLAP instantáneos.
+                </p>
+              </div>
+              <div className="flex items-center space-x-3 pt-2">
+                <label className="flex items-center space-x-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-obsidian-950 font-semibold rounded-lg text-xs cursor-pointer shadow-md transition-all">
+                  <Upload className="w-4 h-4" />
+                  <span>Importar CSV / Parquet</span>
+                  <input type="file" accept=".csv,.json,.parquet" className="hidden" onChange={handleImportData} />
+                </label>
+                <button
+                  onClick={handleConnectActiveSheet}
+                  className="flex items-center space-x-2 px-4 py-2 bg-obsidian-800 hover:bg-obsidian-750 border border-obsidian-700 text-slate-200 font-medium rounded-lg text-xs transition-all cursor-pointer"
+                >
+                  <Database className="w-4 h-4 text-amber-400" />
+                  <span>Vincular Hoja de Cálculo Activa</span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
           {/* Active Filter Notification Bar */}
           {(selectedRegion || selectedChannel || selectedQuarter) && (
             <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-2.5 flex items-center justify-between text-xs transition-all">
@@ -820,7 +897,7 @@ export const DataWarehouseBIView: React.FC = () => {
 
               <div className="flex items-center space-x-3">
                 <span className="text-slate-400">
-                  Mostrando <strong className="text-slate-200">{filteredData.length}</strong> de {RAW_SALES_DATA.length} particiones OLAP
+                  Mostrando <strong className="text-slate-200">{filteredData.length}</strong> de {salesData.length} particiones OLAP
                 </span>
                 <button
                   onClick={handleClearFilters}
@@ -1437,6 +1514,8 @@ export const DataWarehouseBIView: React.FC = () => {
               </div>
             </div>
           )}
+            </>
+          )}
         </div>
       )}
 
@@ -1579,6 +1658,11 @@ export const DataWarehouseBIView: React.FC = () => {
               </button>
             </div>
 
+            {sqlResults.length === 0 ? (
+              <div className="p-8 text-center text-slate-500 text-xs">
+                No hay resultados devueltos. Escribe o selecciona una consulta SQL y pulsa &ldquo;Ejecutar Consulta en DuckDB WASM&rdquo;.
+              </div>
+            ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
                 <thead className="bg-obsidian-950/60 text-slate-400 text-[10px] uppercase border-b border-obsidian-800">
@@ -1601,6 +1685,7 @@ export const DataWarehouseBIView: React.FC = () => {
                 </tbody>
               </table>
             </div>
+            )}
           </div>
         </div>
       )}

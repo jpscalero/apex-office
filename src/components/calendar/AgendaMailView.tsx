@@ -457,8 +457,23 @@ export const AgendaMailView: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="flex-1 flex items-center justify-center text-slate-500 text-xs">
-                  Selecciona un correo para leer
+                <div className="flex-1 flex flex-col items-center justify-center text-slate-500 text-xs p-8 text-center space-y-3">
+                  <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                    <Mail className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-slate-300">Buzón de Mensajes en Blanco</h4>
+                    <p className="text-xs text-slate-500 mt-1 max-w-xs">
+                      No hay correos en esta bandeja. Puedes redactar un nuevo correo criptográficamente firmado para almacenarlo en local.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setIsComposeOpen(true)}
+                    className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-all"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Redactar Correo</span>
+                  </button>
                 </div>
               )}
 
@@ -487,48 +502,65 @@ export const AgendaMailView: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {events.map((ev) => (
-                <div
-                  key={ev.id}
-                  className={`p-4 rounded-xl border transition-all ${
-                    ev.completed
-                      ? 'bg-obsidian-900/40 border-obsidian-850 opacity-60'
-                      : 'bg-obsidian-900 border-obsidian-750 shadow-lg'
-                  }`}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => toggleEventCompleted(ev.id)}
-                        className={`p-1 rounded-md transition-colors ${
-                          ev.completed ? 'text-emerald-400' : 'text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        <CheckCircle2 className="w-4 h-4" />
-                      </button>
-                      <h4 className={`text-xs font-bold ${ev.completed ? 'line-through text-slate-400' : 'text-white'}`}>
-                        {ev.title}
-                      </h4>
-                    </div>
-                    <button
-                      onClick={() => deleteEvent(ev.id)}
-                      className="text-slate-400 hover:text-rose-400 p-0.5"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400 font-mono">
-                    <span className="flex items-center space-x-1">
-                      <Clock className="w-3 h-3 text-indigo-400" />
-                      <span>{ev.time} ({ev.durationMin}m)</span>
-                    </span>
-                    <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 capitalize border border-indigo-500/20 text-[10px]">
-                      {ev.category}
-                    </span>
-                  </div>
+              {events.length === 0 ? (
+                <div className="col-span-full flex flex-col items-center justify-center p-12 text-center bg-obsidian-900/40 border border-dashed border-obsidian-800 rounded-xl">
+                  <Calendar className="w-12 h-12 mb-3 text-indigo-400/40" />
+                  <h4 className="text-sm font-semibold text-slate-300">No hay eventos en la agenda</h4>
+                  <p className="text-xs text-slate-500 mt-1 max-w-sm">
+                    Programa reuniones, hitos y entregas en tu calendario operativo local sin dependencias en la nube.
+                  </p>
+                  <button
+                    onClick={() => setIsNewEventOpen(true)}
+                    className="mt-4 flex items-center space-x-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium transition-all cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>+ Crear Primer Evento</span>
+                  </button>
                 </div>
-              ))}
+              ) : (
+                events.map((ev) => (
+                  <div
+                    key={ev.id}
+                    className={`p-4 rounded-xl border transition-all ${
+                      ev.completed
+                        ? 'bg-obsidian-900/40 border-obsidian-850 opacity-60'
+                        : 'bg-obsidian-900 border-obsidian-750 shadow-lg'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => toggleEventCompleted(ev.id)}
+                          className={`p-1 rounded-md transition-colors ${
+                            ev.completed ? 'text-emerald-400' : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                        </button>
+                        <h4 className={`text-xs font-bold ${ev.completed ? 'line-through text-slate-400' : 'text-white'}`}>
+                          {ev.title}
+                        </h4>
+                      </div>
+                      <button
+                        onClick={() => deleteEvent(ev.id)}
+                        className="text-slate-400 hover:text-rose-400 p-0.5"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                      <span className="flex items-center space-x-1">
+                        <Clock className="w-3 h-3 text-indigo-400" />
+                        <span>{ev.time} ({ev.durationMin}m)</span>
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 capitalize border border-indigo-500/20 text-[10px]">
+                        {ev.category}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}

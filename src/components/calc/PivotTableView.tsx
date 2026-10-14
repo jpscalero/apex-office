@@ -9,7 +9,6 @@ import {
   Layers,
   FileSpreadsheet,
   CheckCircle2,
-  Database,
   Calculator,
 } from 'lucide-react';
 import { useOfficeStore } from '../../store/useOfficeStore';
@@ -25,25 +24,7 @@ export interface PivotTableViewProps {
   isModal?: boolean;
 }
 
-// Demo enterprise datasets for quick exploration
-const DEMO_SALES_RECORDS = [
-  { Región: 'Norte', Categoría: 'Cloud Computing', Vendedor: 'Elena García', Trimestre: 'Q1', Año: '2025', Canal: 'Directo B2B', Ventas: 64200, Coste: 31000, Unidades: 45 },
-  { Región: 'Norte', Categoría: 'Ciberseguridad', Vendedor: 'Elena García', Trimestre: 'Q2', Año: '2025', Canal: 'Partner', Ventas: 89400, Coste: 42000, Unidades: 32 },
-  { Región: 'Norte', Categoría: 'Licencias SaaS', Vendedor: 'Elena García', Trimestre: 'Q3', Año: '2025', Canal: 'Online', Ventas: 48900, Coste: 18000, Unidades: 120 },
-  { Región: 'Sur', Categoría: 'Cloud Computing', Vendedor: 'Carlos Vega', Trimestre: 'Q1', Año: '2025', Canal: 'Directo B2B', Ventas: 51200, Coste: 26000, Unidades: 38 },
-  { Región: 'Sur', Categoría: 'Consultoría IA', Vendedor: 'Carlos Vega', Trimestre: 'Q2', Año: '2025', Canal: 'Partner', Ventas: 112000, Coste: 58000, Unidades: 15 },
-  { Región: 'Sur', Categoría: 'Licencias SaaS', Vendedor: 'Carlos Vega', Trimestre: 'Q3', Año: '2025', Canal: 'Online', Ventas: 73500, Coste: 29000, Unidades: 180 },
-  { Región: 'Este', Categoría: 'Cloud Computing', Vendedor: 'Marta Ruiz', Trimestre: 'Q1', Año: '2025', Canal: 'Directo B2B', Ventas: 78900, Coste: 37000, Unidades: 52 },
-  { Región: 'Este', Categoría: 'Ciberseguridad', Vendedor: 'Marta Ruiz', Trimestre: 'Q2', Año: '2025', Canal: 'Directo B2B', Ventas: 95400, Coste: 44000, Unidades: 28 },
-  { Región: 'Este', Categoría: 'Consultoría IA', Vendedor: 'Marta Ruiz', Trimestre: 'Q3', Año: '2025', Canal: 'Partner', Ventas: 134000, Coste: 67000, Unidades: 20 },
-  { Región: 'Centro', Categoría: 'Cloud Computing', Vendedor: 'David Ortiz', Trimestre: 'Q1', Año: '2025', Canal: 'Directo B2B', Ventas: 88500, Coste: 41000, Unidades: 60 },
-  { Región: 'Centro', Categoría: 'Licencias SaaS', Vendedor: 'David Ortiz', Trimestre: 'Q2', Año: '2025', Canal: 'Online', Ventas: 62100, Coste: 22000, Unidades: 140 },
-  { Región: 'Centro', Categoría: 'Consultoría IA', Vendedor: 'David Ortiz', Trimestre: 'Q3', Año: '2025', Canal: 'Partner', Ventas: 145000, Coste: 71000, Unidades: 22 },
-  { Región: 'Norte', Categoría: 'Consultoría IA', Vendedor: 'Lucía Méndez', Trimestre: 'Q4', Año: '2025', Canal: 'Directo B2B', Ventas: 98000, Coste: 49000, Unidades: 18 },
-  { Región: 'Sur', Categoría: 'Ciberseguridad', Vendedor: 'Lucía Méndez', Trimestre: 'Q4', Año: '2025', Canal: 'Partner', Ventas: 84300, Coste: 39000, Unidades: 31 },
-  { Región: 'Este', Categoría: 'Licencias SaaS', Vendedor: 'Lucía Méndez', Trimestre: 'Q4', Año: '2025', Canal: 'Online', Ventas: 92400, Coste: 34000, Unidades: 210 },
-  { Región: 'Centro', Categoría: 'Ciberseguridad', Vendedor: 'Lucía Méndez', Trimestre: 'Q4', Año: '2025', Canal: 'Directo B2B', Ventas: 105600, Coste: 48000, Unidades: 35 },
-];
+
 
 export const PivotTableView: React.FC<PivotTableViewProps> = ({
   isOpen = true,
@@ -142,17 +123,9 @@ export const PivotTableView: React.FC<PivotTableViewProps> = ({
     };
   }, [currentSheet]);
 
-  // DataSource selection: 'sheet' | 'demo-sales'
-  const [selectedDataSource, setSelectedDataSource] = useState<'sheet' | 'demo-sales'>(
-    parsedSheetData.records.length >= 2 ? 'sheet' : 'demo-sales'
-  );
-
   const activeRecords = useMemo(() => {
-    if (selectedDataSource === 'sheet' && parsedSheetData.records.length > 0) {
-      return parsedSheetData.records;
-    }
-    return DEMO_SALES_RECORDS;
-  }, [selectedDataSource, parsedSheetData]);
+    return parsedSheetData.records;
+  }, [parsedSheetData]);
 
   const availableFields = useMemo(() => {
     if (activeRecords.length === 0) return [];
@@ -160,15 +133,15 @@ export const PivotTableView: React.FC<PivotTableViewProps> = ({
   }, [activeRecords]);
 
   // Field configurations
-  const [rowFields, setRowFields] = useState<string[]>(['Categoría', 'Región']);
-  const [colField, setColField] = useState<string | null>('Trimestre');
-  const [valField, setValField] = useState<string>('Ventas');
+  const [rowFields, setRowFields] = useState<string[]>([]);
+  const [colField, setColField] = useState<string | null>(null);
+  const [valField, setValField] = useState<string>('');
   const [aggType, setAggType] = useState<AggregationType>('SUM');
   const [formatMode, setFormatMode] = useState<FormatMode>('currency');
 
   // Slicers state: Record<field, Set<selectedValues>>
   const [activeSlicers, setActiveSlicers] = useState<Record<string, string[]>>({});
-  const [enabledSlicerFields, setEnabledSlicerFields] = useState<string[]>(['Región', 'Canal']);
+  const [enabledSlicerFields, setEnabledSlicerFields] = useState<string[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Sync default fields if dataset changes
@@ -666,32 +639,10 @@ export const PivotTableView: React.FC<PivotTableViewProps> = ({
 
         {/* Data source switch & action buttons */}
         <div className="flex items-center space-x-2.5">
-          {/* Data source pills */}
-          <div className="flex items-center bg-obsidian-950 p-1 rounded-lg border border-obsidian-800 text-xs">
-            <button
-              onClick={() => setSelectedDataSource('sheet')}
-              className={`flex items-center space-x-1.5 px-2.5 py-1 rounded transition-colors ${
-                selectedDataSource === 'sheet'
-                  ? 'bg-emerald-600/30 text-emerald-300 font-medium border border-emerald-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-              title="Analizar datos tabulados de la hoja activa"
-            >
-              <FileSpreadsheet className="w-3.5 h-3.5" />
-              <span>Hoja Activa ({parsedSheetData.records.length} filas)</span>
-            </button>
-            <button
-              onClick={() => setSelectedDataSource('demo-sales')}
-              className={`flex items-center space-x-1.5 px-2.5 py-1 rounded transition-colors ${
-                selectedDataSource === 'demo-sales'
-                  ? 'bg-emerald-600/30 text-emerald-300 font-medium border border-emerald-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-              title="Dataset multidimensional de prueba con 6 dimensiones"
-            >
-              <Database className="w-3.5 h-3.5" />
-              <span>Dataset Demo Ventas</span>
-            </button>
+          {/* Active sheet indicator */}
+          <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-obsidian-950 border border-obsidian-800 text-xs text-emerald-300">
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Hoja Activa ({parsedSheetData.records.length} filas detectadas)</span>
           </div>
 
           {/* Action buttons */}
@@ -748,6 +699,25 @@ export const PivotTableView: React.FC<PivotTableViewProps> = ({
       )}
 
       {/* 2. MAIN WORKSPACE: FIELD CONFIGURATION & MATRIX DISPLAY */}
+      {activeRecords.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center p-12 text-center bg-obsidian-950">
+          <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4 text-emerald-400">
+            <Table2 className="w-8 h-8" />
+          </div>
+          <h3 className="text-base font-bold text-white mb-2">No hay datos tabulares en la hoja activa</h3>
+          <p className="text-xs text-slate-400 max-w-md leading-relaxed mb-6">
+            Para generar una tabla dinámica multidimensional, introduce o pega filas con encabezados (por ejemplo: Categoría, Región, Ventas) en tu hoja de cálculo activa de Apex Calc.
+          </p>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-obsidian-800 hover:bg-obsidian-750 text-slate-200 border border-obsidian-700 rounded-lg text-xs font-medium transition-all"
+            >
+              Volver a la Hoja de Cálculo
+            </button>
+          )}
+        </div>
+      ) : (
       <div className="flex-1 flex overflow-hidden">
         {/* LEFT CONFIGURATION DOCK */}
         <aside className="w-72 bg-obsidian-900 border-r border-obsidian-800 flex flex-col shrink-0 overflow-y-auto">
@@ -1217,6 +1187,7 @@ export const PivotTableView: React.FC<PivotTableViewProps> = ({
           </div>
         </main>
       </div>
+      )}
     </div>
   );
 

@@ -45,10 +45,93 @@ export const DataVaultView: React.FC = () => {
   const [customSqlQuery, setCustomSqlQuery] = useState('');
   const [queryExecutionMessage, setQueryExecutionMessage] = useState<string | null>(null);
 
+  const handleCreateTable = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTableName) return;
+    addTable(newTableName, newTableDesc);
+    setNewTableName('');
+    setNewTableDesc('');
+    setIsNewTableModalOpen(false);
+  };
+
   if (!currentTable) {
     return (
-      <div className="flex-1 flex items-center justify-center text-slate-500 text-sm">
-        No hay tablas disponibles en la base de datos local.
+      <div className="flex-1 flex flex-col items-center justify-center bg-obsidian-900 text-slate-400 p-8 select-none">
+        <div className="max-w-md w-full bg-obsidian-950 p-8 rounded-2xl border border-obsidian-800 shadow-2xl text-center space-y-4">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-lg">
+            <Database className="w-7 h-7" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-white">Base de Datos DataVault Vacía</h3>
+            <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+              No hay tablas creadas en el almacén relacional local SQLite WASM. Comienza creando tu primera tabla estructurada con columnas tipadas.
+            </p>
+          </div>
+          <button
+            onClick={() => setIsNewTableModalOpen(true)}
+            className="w-full py-2.5 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs flex items-center justify-center space-x-2 shadow-lg shadow-cyan-600/20 transition-all cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Crear Primera Tabla</span>
+          </button>
+        </div>
+
+        {isNewTableModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+            <div className="w-full max-w-md bg-obsidian-900 border border-obsidian-700 rounded-xl p-6 shadow-2xl space-y-4">
+              <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
+                <h3 className="text-sm font-bold text-white flex items-center space-x-2">
+                  <Database className="w-4 h-4 text-cyan-400" />
+                  <span>Crear Nueva Tabla Relacional</span>
+                </h3>
+                <button onClick={() => setIsNewTableModalOpen(false)} className="text-slate-400 hover:text-white">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleCreateTable} className="space-y-3">
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-slate-300 block">Nombre de la Tabla</label>
+                  <input
+                    type="text"
+                    required
+                    value={newTableName}
+                    onChange={(e) => setNewTableName(e.target.value)}
+                    placeholder="ej. Clientes, Facturas, Inventario..."
+                    className="w-full bg-obsidian-950 border border-obsidian-750 text-xs text-white px-3 py-2 rounded-lg focus:outline-none focus:border-cyan-500/50"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-slate-300 block">Descripción</label>
+                  <input
+                    type="text"
+                    value={newTableDesc}
+                    onChange={(e) => setNewTableDesc(e.target.value)}
+                    placeholder="Propósito del esquema relacional..."
+                    className="w-full bg-obsidian-950 border border-obsidian-750 text-xs text-white px-3 py-2 rounded-lg focus:outline-none focus:border-cyan-500/50"
+                  />
+                </div>
+
+                <div className="pt-2 flex items-center justify-end space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsNewTableModalOpen(false)}
+                    className="px-3 py-1.5 rounded-lg text-xs text-slate-400 hover:bg-obsidian-800"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs shadow-md shadow-cyan-600/20"
+                  >
+                    Crear Tabla
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -68,14 +151,6 @@ export const DataVaultView: React.FC = () => {
     setIsNewRecordModalOpen(false);
   };
 
-  const handleCreateTable = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTableName) return;
-    addTable(newTableName, newTableDesc);
-    setNewTableName('');
-    setNewTableDesc('');
-    setIsNewTableModalOpen(false);
-  };
 
   const handleCreateField = (e: React.FormEvent) => {
     e.preventDefault();

@@ -1358,110 +1358,7 @@ export const PhysicalUnitsConverterPanel: React.FC<{ isOpen: boolean; onClose: (
 // 7. CELDAS INICIALES PRECARGADAS EJECUTADAS
 // ============================================================================
 
-const INITIAL_DEMO_CELLS: ReactiveCell[] = [
-  {
-    id: 'cell-cas-1',
-    language: 'cas-math',
-    code: `# Cálculo Simbólico CAS: Derivada analítica exacta e integración analítica
-f(x) = x^3 * sin(x) + exp(2*x)
-df = diff(f(x), x)
-
-g(x) = 3*x^2 + cos(x)
-int_g = integrate(g(x), x)`,
-    executionCount: 1,
-    status: 'success',
-    executionTimeMs: 14,
-    output: {
-      type: 'latex',
-      latex: `\\begin{aligned}
-\\frac{d}{dx}\\left[x^3 \\sin(x) + e^{2x}\\right] &= 3x^2 \\sin(x) + x^3 \\cos(x) + 2e^{2x} \\\\[8pt]
-\\int \\left(3x^2 + \\cos(x)\\right) dx &= x^3 + \\sin(x) + C \\\\[8pt]
-\\text{Evaluación en } x = \\frac{\\pi}{2}: &\\quad f'(\\pi/2) = \\frac{3\\pi^2}{4} + 2e^{\\pi} \\approx 53.649
-\\end{aligned}`,
-      text: 'Derivada analítica e integral calculadas con éxito.',
-    },
-  },
-  {
-    id: 'cell-matrix-2',
-    language: 'python',
-    code: `import numpy as np
-import scipy.linalg as la
-
-# Diagonalización espectral y autovalores de matriz Hermítica/Simétrica A
-A = np.array([
-    [4.0, 1.0, 2.0],
-    [1.0, 5.0, 0.0],
-    [2.0, 0.0, 3.0]
-])
-
-evals, evecs = la.eigh(A)
-det_A = np.linalg.det(A)
-trace_A = np.trace(A)
-
-print(f"Det(A) = {det_A:.4f}, Trace(A) = {trace_A:.4f}")
-print("Autovalores λ:", np.round(evals[::-1], 4))`,
-    executionCount: 2,
-    status: 'success',
-    executionTimeMs: 29,
-    output: {
-      type: 'matrix',
-      matrixData: {
-        matrix: [
-          [4, 1, 2],
-          [1, 5, 0],
-          [2, 0, 3],
-        ],
-        eigenvalues: [6.3229, 3.4862, 2.1909],
-        eigenvectors: [
-          [0.5828, -0.4281, 0.6904],
-          [0.6133, -0.3208, -0.7219],
-          [0.5332, 0.8447, -0.0763],
-        ],
-        determinant: 43.0,
-        trace: 12.0,
-        isSymmetric: true,
-      },
-    },
-  },
-  {
-    id: 'cell-plot-3',
-    language: 'python',
-    code: `# Análisis Espectral FFT & Visualización Paramétrica 3D
-# Señal bi-tonal: 50 Hz + 120 Hz con ruido gaussiano
-t, signal = synthesize_signal(freqs=[50, 120], Fs=1000, duration=0.6)
-fft_spec = compute_fft(signal, sample_rate=1000)
-
-# Mapeo de superficie matemática: Sombrero Mexicano z = sin(r)/r
-surf = plot_surface_3d(surface='mexican_hat', colormap='viridis', wireframe=True)`,
-    executionCount: 3,
-    status: 'success',
-    executionTimeMs: 42,
-    output: {
-      type: 'plot3d',
-      surface3d: {
-        surfaceType: 'mexican_hat',
-        colormap: 'viridis',
-        resolution: 32,
-        wireframe: true,
-        shading: true,
-        autoRotate: true,
-        zoom: 1.05,
-        pitch: 0.45,
-        yaw: 0.78,
-      },
-      fftData: {
-        frequencies: [0, 20, 50, 80, 100, 120, 150, 200, 250, 300, 400, 500],
-        magnitudes: [0.05, 0.08, 1.0, 0.09, 0.12, 0.62, 0.07, 0.04, 0.03, 0.02, 0.01, 0.01],
-        psdDbm: [-10.2, -8.1, 14.5, -7.9, -6.1, 10.3, -9.1, -12.4, -14.2, -15.8, -17.0, -18.2],
-        peaks: [
-          { freq: 50.0, mag: 1.0 },
-          { freq: 120.0, mag: 0.62 },
-        ],
-        sampleRate: 1000,
-      },
-    },
-  },
-];
+const INITIAL_DEMO_CELLS: ReactiveCell[] = [];
 
 // ============================================================================
 // 8. COMPONENTE PRINCIPAL: ScienceNotebookView
@@ -1469,11 +1366,11 @@ surf = plot_surface_3d(surface='mexican_hat', colormap='viridis', wireframe=True
 
 export const ScienceNotebookView: React.FC = () => {
   const [cells, setCells] = useState<ReactiveCell[]>(INITIAL_DEMO_CELLS);
-  const [activeCellId, setActiveCellId] = useState<string>(INITIAL_DEMO_CELLS[0].id);
+  const [activeCellId, setActiveCellId] = useState<string | null>(null);
   const [activeKernel, setActiveKernel] = useState<KernelId>('apex-cas');
   const [isUnitsModalOpen, setIsUnitsModalOpen] = useState<boolean>(false);
   const [isRunningAll, setIsRunningAll] = useState<boolean>(false);
-  const [globalExecutionCounter, setGlobalExecutionCounter] = useState<number>(3);
+  const [globalExecutionCounter, setGlobalExecutionCounter] = useState<number>(0);
   const [showFormulaHelper, setShowFormulaHelper] = useState<boolean>(false);
 
   // Ejecución de una celda específica
@@ -1898,7 +1795,32 @@ export const ScienceNotebookView: React.FC = () => {
         )}
 
         <div className="max-w-4xl mx-auto space-y-5">
-          {cells.map((cell, idx) => {
+          {cells.length === 0 ? (
+            <div className="flex flex-col items-center justify-center p-16 text-slate-500 space-y-4 bg-obsidian-950/40 rounded-2xl border border-dashed border-obsidian-800 text-center">
+              <Sparkles className="w-12 h-12 text-teal-500/50" />
+              <div>
+                <h3 className="text-sm font-semibold text-slate-200">Cuaderno Científico en Blanco</h3>
+                <p className="text-xs text-slate-400 mt-1">Comienza añadiendo una celda de cálculo simbólico CAS, Python o TypeScript.</p>
+              </div>
+              <div className="flex items-center space-x-2 pt-2">
+                <button
+                  onClick={() => handleAddCell("cas-math")}
+                  className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-medium flex items-center space-x-1.5 shadow transition-all cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>+ Celda CAS</span>
+                </button>
+                <button
+                  onClick={() => handleAddCell("python")}
+                  className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium flex items-center space-x-1.5 shadow transition-all cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>+ Celda Python</span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            cells.map((cell, idx) => {
             const isActive = activeCellId === cell.id;
             return (
               <div
@@ -2156,7 +2078,8 @@ export const ScienceNotebookView: React.FC = () => {
                 </div>
               </div>
             );
-          })}
+          })
+          )}
         </div>
 
         {/* Botón flotante al fondo para añadir celda */}

@@ -83,8 +83,15 @@ export const AIOfficeCopilotDrawer: React.FC = () => {
 
       const lower = q.toLowerCase();
       if (lower.includes('resum') || lower.includes('resumen')) {
-        reply = `**Resumen Ejecutivo del Documento Actual:**\n\n1. **Objetivo Central:** Establecer una política de Confianza Cero (Zero-Trust) y erradicar dependencias vulnerables en la infraestructura ofimática.\n2. **Seguridad en Cálculos:** Eliminación absoluta del protocolo inseguro DDE (CWE-1236) y sustitución por un motor analítico columnar.\n3. **Soberanía y Privacidad:** Aislamiento de macros en WebAssembly (WASM) y purgado irreversible de metadatos (RSID, rutas UNC) antes de cualquier exportación.`;
-        suggestedAction = 'Insertar Resumen al Inicio del Documento';
+        const textContent = activeDoc?.content?.replace(/<[^>]+>/g, ' ').trim() || '';
+        if (textContent.length > 0) {
+          const sample = textContent.split(/\s+/).slice(0, 35).join(' ');
+          reply = `**Resumen del Documento Activo ("${activeDoc?.title || 'Documento'}"):**\n\n- Palabras detectadas: ${activeDoc?.wordCount || 0}\n- Caracteres: ${activeDoc?.charCount || textContent.length}\n- Tiempo estimado de lectura: ${activeDoc?.readingTimeMin || 1} min\n\n*Extracto del texto:*\n"${sample}..."\n\n*Análisis del Copiloto:* El contenido ha sido verificado localmente en memoria sin telemetría externa.`;
+          suggestedAction = 'Insertar Resumen al Inicio del Documento';
+        } else {
+          reply = `**Resumen del Documento Activo ("${activeDoc?.title || 'Documento 1'}"):**\n\nEl documento actual está completamente en blanco (0 palabras). Escribe o pega texto en Apex Writer para que el Copiloto Neural pueda analizar su contenido.`;
+          suggestedAction = '';
+        }
       } else if (lower.includes('fórmula') || lower.includes('calc') || lower.includes('suma')) {
         reply = `Para calcular la métrica solicitada en Apex Calc, te sugiero la siguiente fórmula matricial optimizada:\n\n\`=IF(SUM(D2:D50) > 100000, SUM(D2:D50) * 0.15, AVERAGE(D2:D50) * 1.05)\`\n\nEsta expresión evalúa el volumen acumulado de la columna D y aplica una bonificación del 15% si supera el umbral, o una proyección promedio en caso contrario.`;
         suggestedAction = 'Copiar Fórmula a la Celda Activa';

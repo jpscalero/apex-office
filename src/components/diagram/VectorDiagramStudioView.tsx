@@ -240,133 +240,9 @@ const COLOR_PRESETS = [
 // INITIAL DEMO DIAGRAM: ARQUITECTURA CLOUD DE MICROSERVICIOS
 // ============================================================================
 
-export const INITIAL_DEMO_NODES: DiagramNode[] = [
-  {
-    id: 'node-1',
-    type: 'cloud-aws',
-    label: 'AWS Route 53 & CloudFront',
-    x: 80,
-    y: 220,
-    width: 210,
-    height: 85,
-    color: '#f59e0b',
-    description: 'Edge CDN Anycast + DNS Failover',
-  },
-  {
-    id: 'node-2',
-    type: 'cloud-ec2',
-    label: 'AWS API Gateway (Envoy)',
-    x: 370,
-    y: 220,
-    width: 210,
-    height: 85,
-    color: '#f97316',
-    description: 'Reverse Proxy, Rate Limiter & SSL Offload',
-  },
-  {
-    id: 'node-3',
-    type: 'cloud-k8s',
-    label: 'Auth & Identity Pod',
-    x: 690,
-    y: 90,
-    width: 220,
-    height: 95,
-    color: '#0ea5e9',
-    description: 'OAuth2 / OIDC + JWT Verification Service',
-  },
-  {
-    id: 'node-4',
-    type: 'cloud-k8s',
-    label: 'Order & Billing Pod',
-    x: 690,
-    y: 350,
-    width: 220,
-    height: 95,
-    color: '#0ea5e9',
-    description: 'Core Business Logic / Kafka Producer',
-  },
-  {
-    id: 'node-5',
-    type: 'cloud-postgres',
-    label: 'PostgreSQL Aurora DB',
-    x: 1020,
-    y: 350,
-    width: 220,
-    height: 95,
-    color: '#6366f1',
-    description: 'Cluster Multi-AZ (ACID + Read Replicas)',
-  },
-  {
-    id: 'node-6',
-    type: 'cloud-s3',
-    label: 'AWS S3 Document Vault',
-    x: 1020,
-    y: 90,
-    width: 220,
-    height: 95,
-    color: '#10b981',
-    description: 'Encrypted Invoices & Assets Storage',
-  },
-];
+export const INITIAL_DEMO_NODES: DiagramNode[] = [];
 
-export const INITIAL_DEMO_EDGES: DiagramEdge[] = [
-  {
-    id: 'edge-1',
-    source: 'node-1',
-    target: 'node-2',
-    label: 'HTTPS / TLS 1.3',
-    style: 'orthogonal',
-    color: '#38bdf8',
-  },
-  {
-    id: 'edge-2',
-    source: 'node-2',
-    target: 'node-3',
-    label: '/api/v1/auth',
-    style: 'orthogonal',
-    color: '#38bdf8',
-  },
-  {
-    id: 'edge-3',
-    source: 'node-2',
-    target: 'node-4',
-    label: '/api/v1/orders',
-    style: 'orthogonal',
-    color: '#38bdf8',
-  },
-  {
-    id: 'edge-4',
-    source: 'node-3',
-    target: 'node-4',
-    label: 'JWT Claims',
-    style: 'orthogonal',
-    color: '#818cf8',
-  },
-  {
-    id: 'edge-5',
-    source: 'node-4',
-    target: 'node-5',
-    label: 'SQL Transactions',
-    style: 'orthogonal',
-    color: '#818cf8',
-  },
-  {
-    id: 'edge-6',
-    source: 'node-4',
-    target: 'node-6',
-    label: 'Store Receipts',
-    style: 'orthogonal',
-    color: '#10b981',
-  },
-  {
-    id: 'edge-7',
-    source: 'node-3',
-    target: 'node-5',
-    label: 'User Store',
-    style: 'orthogonal',
-    color: '#6366f1',
-  },
-];
+export const INITIAL_DEMO_EDGES: DiagramEdge[] = [];
 
 // ============================================================================
 // ORTHOGONAL CONNECTOR ROUTING ALGORITHMS
@@ -739,8 +615,8 @@ function parseMermaidToDiagram(mermaidText: string): { nodes: DiagramNode[]; edg
 
 export const VectorDiagramStudioView: React.FC = () => {
   // 1. Diagram State
-  const [nodes, setNodes] = useState<DiagramNode[]>(INITIAL_DEMO_NODES);
-  const [edges, setEdges] = useState<DiagramEdge[]>(INITIAL_DEMO_EDGES);
+  const [nodes, setNodes] = useState<DiagramNode[]>([]);
+  const [edges, setEdges] = useState<DiagramEdge[]>([]);
 
   // 2. Viewport & Pan/Zoom
   const [zoom, setZoom] = useState<number>(1.0);
@@ -770,9 +646,7 @@ export const VectorDiagramStudioView: React.FC = () => {
   const [isInspectorOpen, setIsInspectorOpen] = useState<boolean>(true);
 
   // 6. Mermaid Code State
-  const [mermaidCode, setMermaidCode] = useState<string>(() =>
-    generateMermaidCode(INITIAL_DEMO_NODES, INITIAL_DEMO_EDGES)
-  );
+  const [mermaidCode, setMermaidCode] = useState<string>("graph TD;\n");
   const [mermaidError, setMermaidError] = useState<string | null>(null);
   const [copiedCode, setCopiedCode] = useState<boolean>(false);
 
@@ -2068,6 +1942,18 @@ export const VectorDiagramStudioView: React.FC = () => {
                 {/* DOM Nodes Layer */}
                 {nodes.map(renderNodeComponent)}
               </div>
+
+              {nodes.length === 0 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-500 pointer-events-none select-none space-y-2 z-10">
+                  <div className="w-12 h-12 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
+                    <Boxes className="w-6 h-6" />
+                  </div>
+                  <p className="text-sm font-semibold text-slate-300">Lienzo de Diagramas en Blanco</p>
+                  <p className="text-xs text-slate-500 max-w-sm text-center">
+                    Arrastra o haz clic en cualquier nodo de la paleta izquierda (BPMN, UML, Cloud) para comenzar tu modelo visual.
+                  </p>
+                </div>
+              )}
 
               {/* Canvas Overlay Badges */}
               <div className="absolute bottom-3 left-3 flex items-center space-x-2 pointer-events-none">

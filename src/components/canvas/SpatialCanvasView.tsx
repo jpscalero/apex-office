@@ -203,246 +203,9 @@ export interface HRTFTelemetry {
 // INITIAL DEMO DATA
 // ==========================================
 
-const INITIAL_STICKY_NOTES: SmartStickyNote[] = [
-  // Retro Pre-placed Notes
-  {
-    id: 'note-retro-1',
-    x: 180,
-    y: 200,
-    width: 220,
-    height: 180,
-    title: 'Cero Fugas de Memoria',
-    content: 'La migración del motor de celdas a TypedArrays redujo el uso de heap en un 40%.',
-    color: 'mint',
-    tag: '#Performance',
-    category: 'Backend & Datos',
-    rotation: -1.2,
-    author: 'Carlos (Lead Dev)',
-  },
-  {
-    id: 'note-retro-2',
-    x: 440,
-    y: 200,
-    width: 220,
-    height: 180,
-    title: 'Cuello de Botella en Render',
-    content: 'Los árboles DOM de más de 10,000 nodos sufren con CSS backdrop-filter en Chromium.',
-    color: 'yellow',
-    tag: '#Bottleneck',
-    category: 'Frontend & UI',
-    rotation: 1.5,
-    author: 'Elena (Diseño)',
-  },
-  {
-    id: 'note-retro-3',
-    x: 700,
-    y: 200,
-    width: 220,
-    height: 180,
-    title: 'Adopción de WebGPU',
-    content: 'Prototipar aceleración de shader WGSL para renderizado masivo de la pizarra infinita.',
-    color: 'sky',
-    tag: '#NextSprint',
-    category: 'Frontend & UI',
-    rotation: -0.8,
-    author: 'Sara (QA)',
-  },
+const INITIAL_STICKY_NOTES: SmartStickyNote[] = [];
 
-  // Unclustered Smart Notes ready for Local Semantic AI Clustering
-  {
-    id: 'note-cluster-1',
-    x: 120,
-    y: 780,
-    width: 230,
-    height: 190,
-    title: 'Migración a React 19 Concurrente',
-    content: 'Aprovechar Server Actions, useActionState y transiciones fluidas sin re-renders fantasma.',
-    color: 'sky',
-    tag: '#React19',
-    category: 'Frontend & UI',
-    rotation: 0.9,
-    author: 'Elena (Diseño)',
-  },
-  {
-    id: 'note-cluster-2',
-    x: 390,
-    y: 820,
-    width: 230,
-    height: 190,
-    title: 'Autenticación WebAuthn FIDO2',
-    content: 'Reemplazo total de credenciales por llaves Passkeys biométricas con enclave TPM.',
-    color: 'coral',
-    tag: '#ZeroTrust',
-    category: 'Seguridad & Criptografía',
-    rotation: -1.4,
-    author: 'Sara (QA)',
-  },
-  {
-    id: 'note-cluster-3',
-    x: 660,
-    y: 770,
-    width: 230,
-    height: 190,
-    title: 'Design System & Tokens Tailwind',
-    content: 'Paleta HSL semántica con soporte nativo de alto contraste y modos Obsidian y Nord.',
-    color: 'lavender',
-    tag: '#DesignSystem',
-    category: 'Frontend & UI',
-    rotation: -0.6,
-    author: 'Elena (Diseño)',
-  },
-  {
-    id: 'note-cluster-4',
-    x: 930,
-    y: 810,
-    width: 230,
-    height: 190,
-    title: 'Cluster SQLite WASM + Litestream',
-    content: 'Replicación P2P streaming en tiempo real con cifrado de páginas AES-GCM local.',
-    color: 'mint',
-    tag: '#SQLite',
-    category: 'Backend & Datos',
-    rotation: 1.1,
-    author: 'Carlos (Lead Dev)',
-  },
-  {
-    id: 'note-cluster-5',
-    x: 1200,
-    y: 790,
-    width: 230,
-    height: 190,
-    title: 'Hardening Zero-Trust & RBAC',
-    content: 'Validación criptográfica de permisos a nivel de byte en cada transacción del documento.',
-    color: 'coral',
-    tag: '#Criptografía',
-    category: 'Seguridad & Criptografía',
-    rotation: -1.7,
-    author: 'Sara (QA)',
-  },
-  {
-    id: 'note-cluster-6',
-    x: 150,
-    y: 1040,
-    width: 230,
-    height: 190,
-    title: 'CI/CD con Artefactos Firmados',
-    content: 'Generar binarios portables Windows/macOS en GitHub Actions con sellado de tiempo RFC 3161.',
-    color: 'yellow',
-    tag: '#DevOps',
-    category: 'DevOps & CI/CD',
-    rotation: 1.3,
-    author: 'Carlos (Lead Dev)',
-  },
-  {
-    id: 'note-cluster-7',
-    x: 430,
-    y: 1060,
-    width: 230,
-    height: 190,
-    title: 'Telemetría OpenTelemetry P2P',
-    content: 'Monitoreo de latencia P99 entre nodos WebRTC y contadores de frames descartados.',
-    color: 'lavender',
-    tag: '#Monitoring',
-    category: 'DevOps & CI/CD',
-    rotation: -0.5,
-    author: 'Sara (QA)',
-  },
-  {
-    id: 'note-cluster-8',
-    x: 710,
-    y: 1030,
-    width: 230,
-    height: 190,
-    title: 'Particionado de Tablas & B-Tree',
-    content: 'Optimización de índices compuestos para tablas de más de 500k filas sin lag en scroll.',
-    color: 'mint',
-    tag: '#SQL',
-    category: 'Backend & Datos',
-    rotation: 1.8,
-    author: 'Carlos (Lead Dev)',
-  },
-];
-
-const INITIAL_FRAMES: StructuredFrame[] = [
-  {
-    id: 'frame-retro-1',
-    title: 'Retrospectiva Ágil • Sprint 42 Q4',
-    templateType: 'retro',
-    x: 120,
-    y: 100,
-    width: 860,
-    height: 540,
-    sections: [
-      {
-        id: 'sec-worked',
-        title: 'Qué Funcionó Bien',
-        subtitle: 'Logros y buenas prácticas',
-        colorHex: '#10B981',
-        badge: 'ÉXITO',
-        rect: { x: 20, y: 60, width: 260, height: 460 },
-      },
-      {
-        id: 'sec-improve',
-        title: 'Qué Mejorar',
-        subtitle: 'Bloqueos y fricción operativa',
-        colorHex: '#F59E0B',
-        badge: 'ATENCIÓN',
-        rect: { x: 300, y: 60, width: 260, height: 460 },
-      },
-      {
-        id: 'sec-actions',
-        title: 'Acciones de Mejora',
-        subtitle: 'Compromisos para el siguiente ciclo',
-        colorHex: '#3B82F6',
-        badge: 'ACCIONES',
-        rect: { x: 580, y: 60, width: 260, height: 460 },
-      },
-    ],
-  },
-  {
-    id: 'frame-eisenhower-1',
-    title: 'Matriz de Eisenhower • Prioridades Estratégicas',
-    templateType: 'eisenhower',
-    x: 1060,
-    y: 100,
-    width: 760,
-    height: 540,
-    sections: [
-      {
-        id: 'sec-q1',
-        title: '1. Urgente e Importante',
-        subtitle: 'Hacer Inmediatamente (Crisis)',
-        colorHex: '#F43F5E',
-        badge: 'HACER YA',
-        rect: { x: 20, y: 60, width: 350, height: 215 },
-      },
-      {
-        id: 'sec-q2',
-        title: '2. No Urgente pero Importante',
-        subtitle: 'Planificar & Diseñar (Estrategia)',
-        colorHex: '#3B82F6',
-        badge: 'PLANIFICAR',
-        rect: { x: 390, y: 60, width: 350, height: 215 },
-      },
-      {
-        id: 'sec-q3',
-        title: '3. Urgente pero No Importante',
-        subtitle: 'Delegar & Automatizar',
-        colorHex: '#F59E0B',
-        badge: 'DELEGAR',
-        rect: { x: 20, y: 295, width: 350, height: 225 },
-      },
-      {
-        id: 'sec-q4',
-        title: '4. Ni Urgente Ni Importante',
-        subtitle: 'Eliminar o Posponer',
-        colorHex: '#64748B',
-        badge: 'ELIMINAR',
-        rect: { x: 390, y: 295, width: 350, height: 225 },
-      },
-    ],
-  },
-];
+const INITIAL_FRAMES: StructuredFrame[] = [];
 
 const INITIAL_DIGITAL_TWIN: DigitalTwinModel = {
   id: 'twin-edge-server-1',
@@ -467,47 +230,7 @@ const INITIAL_DIGITAL_TWIN: DigitalTwinModel = {
   },
 };
 
-const INITIAL_COLLABORATORS: CollaboratorPeer[] = [
-  {
-    id: 'peer-elena',
-    name: 'Elena',
-    role: 'Diseño UI/UX',
-    color: '#EC4899',
-    cursorX: 520,
-    cursorY: 340,
-    targetX: 540,
-    targetY: 360,
-    isSpeaking: true,
-    statusText: 'Revisando cuadrícula de Eisenhower',
-    avatarText: 'EL',
-  },
-  {
-    id: 'peer-carlos',
-    name: 'Carlos',
-    role: 'Lead Dev',
-    color: '#10B981',
-    cursorX: 1220,
-    cursorY: 880,
-    targetX: 1250,
-    targetY: 890,
-    isSpeaking: false,
-    statusText: 'Inspeccionando telemetría CAD PBR',
-    avatarText: 'CD',
-  },
-  {
-    id: 'peer-sara',
-    name: 'Sara',
-    role: 'QA & Security',
-    color: '#F59E0B',
-    cursorX: 780,
-    cursorY: 960,
-    targetX: 790,
-    targetY: 980,
-    isSpeaking: true,
-    statusText: 'Validando clustering semántico',
-    avatarText: 'SR',
-  },
-];
+const INITIAL_COLLABORATORS: CollaboratorPeer[] = [];
 
 export const SpatialCanvasView: React.FC = () => {
   // ==========================================
@@ -528,6 +251,7 @@ export const SpatialCanvasView: React.FC = () => {
   const [notes, setNotes] = useState<SmartStickyNote[]>(INITIAL_STICKY_NOTES);
   const [frames, setFrames] = useState<StructuredFrame[]>(INITIAL_FRAMES);
   const [digitalTwin, setDigitalTwin] = useState<DigitalTwinModel>(INITIAL_DIGITAL_TWIN);
+  const [showDigitalTwin, setShowDigitalTwin] = useState<boolean>(false);
   const [strokes, setStrokes] = useState<FreehandStroke[]>([]);
   const [currentStroke, setCurrentStroke] = useState<StrokePoint[] | null>(null);
 
@@ -696,6 +420,7 @@ export const SpatialCanvasView: React.FC = () => {
 
   // Telemetry jitter for 3D Digital Twin
   useEffect(() => {
+    if (!showDigitalTwin) return;
     const timer = setInterval(() => {
       setDigitalTwin((prev) => ({
         ...prev,
@@ -1504,6 +1229,20 @@ export const SpatialCanvasView: React.FC = () => {
           <span className="text-xs hidden sm:inline">Marco</span>
         </button>
 
+        {/* Toggle 3D Digital Twin */}
+        <button
+          onClick={() => setShowDigitalTwin((prev) => !prev)}
+          className={`p-2 rounded-xl transition-all flex items-center space-x-1.5 ${
+            showDigitalTwin
+              ? "bg-sky-500 text-white shadow-lg shadow-sky-500/30"
+              : "text-slate-400 hover:text-white hover:bg-obsidian-800"
+          }`}
+          title="Mostrar u ocultar Modelo 3D Digital Twin"
+        >
+          <Box className="w-4 h-4" />
+          <span className="text-xs hidden sm:inline">Modelo 3D</span>
+        </button>
+
         {/* Freehand Brush Tool */}
         <button
           onClick={() => setActiveTool('draw')}
@@ -1739,6 +1478,18 @@ export const SpatialCanvasView: React.FC = () => {
           <rect width="100%" height="100%" fill="url(#spatial-dots-major)" />
         </svg>
 
+        {notes.length === 0 && frames.length === 0 && strokes.length === 0 && !showDigitalTwin && (
+          <div className="absolute top-[800px] left-[1000px] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-slate-500 pointer-events-none select-none space-y-3 z-10">
+            <div className="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shadow-xl">
+              <Sparkles className="w-7 h-7" />
+            </div>
+            <p className="text-base font-semibold text-slate-300">Pizarra Espacial en Blanco</p>
+            <p className="text-xs text-slate-500 max-w-sm text-center">
+              Agrega notas adhesivas inteligentes, marcos estructurados o dibuja libremente con el lápiz.
+            </p>
+          </div>
+        )}
+
         {/* Magnetic Snapping Guide Indicator Line */}
         {magneticSnapGuide && (
           <div
@@ -1845,7 +1596,8 @@ export const SpatialCanvasView: React.FC = () => {
         {/* ========================================== */}
         {/* 4.2 3D DIGITAL TWIN CAD INSPECTOR MODEL */}
         {/* ========================================== */}
-        <div
+        {showDigitalTwin && (
+          <div
           className="absolute rounded-3xl bg-obsidian-950/90 border border-obsidian-800/90 shadow-2xl backdrop-blur-xl flex flex-col overflow-hidden"
           style={{
             left: `${digitalTwin.x}px`,
@@ -1965,6 +1717,7 @@ export const SpatialCanvasView: React.FC = () => {
             </div>
           </div>
         </div>
+        )}
 
         {/* ========================================== */}
         {/* 4.3 FREEHAND STROKES & DETECTED VECTORS */}
