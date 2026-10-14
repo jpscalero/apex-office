@@ -234,15 +234,15 @@ export const DataWarehouseBIView: React.FC = () => {
     },
     {
       id: 'node-4',
-      title: '4. Load: Almacén Local OPFS',
-      subtitle: 'DuckDB Native Table • Origin Sovereign',
+      title: '4. Load: Almacén Local Soberano',
+      subtitle: 'Native Sovereign Table • Local Cache',
       category: 'load',
       throughput: '180k rows/seg',
       status: 'success',
       latency: '65 ms',
-      details: 'Persistencia directa en Origin Private File System (OPFS). Cifrado local AES-256-GCM verificado.',
+      details: 'Persistencia directa en Almacén Local Soberano (LocalStorage). Cifrado local verificado.',
       inputs: ['cube::regional_channel_aggregates'],
-      outputs: ['opfs://warehouse/sales_lakehouse.db'],
+      outputs: ['local://warehouse/sales_lakehouse.db'],
     },
   ]);
 
@@ -654,7 +654,7 @@ export const DataWarehouseBIView: React.FC = () => {
               <option value="Ventas Globales Enterprise 2026 (1.25M Filas)">Ventas Globales Enterprise 2026 (1.25M Filas)</option>
               <option value="Métricas Financieras & EBITDA 2024-2026">Métricas Financieras & EBITDA 2024-2026</option>
               <option value="Telemetría Cloud & Rendimiento P99">Telemetría Cloud & Rendimiento P99</option>
-              <option value="Archivo Parquet Local (Local OPFS Store)">Archivo Parquet Local (Local OPFS Store)</option>
+              <option value="Archivo Parquet Local (Local Store)">Archivo Parquet Local (Local Store)</option>
             </select>
           </div>
 
@@ -1547,7 +1547,7 @@ export const DataWarehouseBIView: React.FC = () => {
                 <div className="text-[11px] text-slate-400 flex items-center space-x-3 mt-0.5">
                   <span>Motor: DuckDB WASM v1.1.2 SIMD</span>
                   <span>RAM: {sqlMetrics.ramMB} MB</span>
-                  <span>Almacenamiento: OPFS Sovereign Cache</span>
+                  <span>Almacenamiento: Sovereign Local Cache</span>
                 </div>
               </div>
             </div>
@@ -1618,7 +1618,7 @@ export const DataWarehouseBIView: React.FC = () => {
                 <span>Canalización de Datos No-Code (Visual ETL Pipeline)</span>
               </h3>
               <p className="text-[11px] text-slate-400">
-                Extracción Parquet local → Filtrado SIMD → Agregación Columnar → Carga en OPFS Soberano
+                Extracción Parquet local → Filtrado SIMD → Agregación Columnar → Carga en Almacén Local Soberano
               </p>
             </div>
 
@@ -1749,7 +1749,7 @@ export const DataWarehouseBIView: React.FC = () => {
                   </div>
                   <div className="flex justify-between py-1 border-b border-obsidian-800">
                     <span className="text-slate-400">Estado de Memoria:</span>
-                    <span className="font-mono text-emerald-400">OPFS Cached (0 fugas)</span>
+                    <span className="font-mono text-emerald-400">Local Cached (0 fugas)</span>
                   </div>
                   <div className="flex justify-between py-1 border-b border-obsidian-800">
                     <span className="text-slate-400">Aislamiento Sandbox:</span>

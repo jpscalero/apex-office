@@ -75,7 +75,7 @@ export const CookieConsentBanner: React.FC = () => {
       {/* Explanatory Body */}
       <div className="mt-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed space-y-2">
         <p>
-          Apex Office utiliza <strong>cookies técnicas y almacenamiento local en tu dispositivo</strong> (LocalStorage e IndexedDB)
+          Apex Office utiliza <strong>cookies técnicas y almacenamiento local en tu dispositivo</strong> (LocalStorage local bajo la clave apex-office-state-v1)
           estrictamente necesarios para recordar tu sesión de trabajo, el ajuste de ventana y tus preferencias de tema sin requerir conexión.
         </p>
         <div className="flex items-center space-x-1.5 text-[11px] text-emerald-700 dark:text-emerald-400 font-medium bg-emerald-50 dark:bg-emerald-950/30 px-2.5 py-1.5 rounded-lg border border-emerald-200 dark:border-emerald-800/40">

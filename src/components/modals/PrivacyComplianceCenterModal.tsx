@@ -193,7 +193,7 @@ Conforme al Capítulo V del RGPD, se certifica que el 100% de la computación oc
           finalidad: 'Gestión de esquemas y tablas relacionales SQLite WASM',
           baseJuridica: 'Consentimiento explícito y control de datos',
           categoriaDatos: 'Registros tabulares y claves foráneas',
-          plazoConservacion: 'Almacén en Origin Private File System (OPFS) encriptado',
+          plazoConservacion: 'Almacenamiento Local Soberano en LocalStorage (clave apex-office-state-v1)',
           medidasSeguridad: 'Sandbox WebAssembly sin sockets de red del sistema operativo',
         },
         {
@@ -312,7 +312,7 @@ MARCO JURÍDICO APLICABLE:
 1. DEFINICIÓN Y ALCANCE
 Una cookie es un fichero que se descarga en el terminal del usuario al acceder a determinadas páginas web o entornos de ejecución de aplicaciones.
 En Apex Office, al tratarse de una suite ofimática de soberanía total que funciona en local (Local-First), las tecnologías de almacenamiento
-empleadas se circunscriben estrictamente al dispositivo del usuario (LocalStorage, IndexedDB, CacheStorage y cookies técnicas en el sandbox de Electron/Navegador).
+empleadas se circunscriben estrictamente al dispositivo del usuario (LocalStorage bajo la clave apex-office-state-v1 y almacenamiento en memoria).
 
 2. DECLARACIÓN FORMAL DE CERO RASTREO (ZERO THIRD-PARTY TRACKING)
 Apex Office Suite declara bajo fe técnica y legal que:
@@ -325,12 +325,12 @@ Apex Office Suite declara bajo fe técnica y legal que:
 
 | Identificador | Dominio / Origen | Tipo de Almacenamiento | Finalidad Específica | Expiración | Régimen Legal |
 | :--- | :--- | :--- | :--- | :--- | :--- |
+| \`apex-office-state-v1\` | Local / On-Device | LocalStorage | Estado persistente completo de la suite ofimática (documentos, hojas, diapositivas, agenda y preferencias) | Hasta purga manual | Técnica (Exenta según Art. 22.2 LSSI) |
 | \`apex_theme\` | Local / On-Device | LocalStorage | Recordar preferencia de interfaz gráfica (tema normal / oscuro) | 12 meses | Personalización (Consentimiento opcional) |
 | \`apex_cookie_consent\` | Local / On-Device | LocalStorage | Almacenar las opciones de consentimiento de cookies elegidas | 6 meses | Técnica (Exenta según Art. 22.2 LSSI) |
 | \`apex_window_bounds\` | Local / On-Device | LocalStorage | Preservar resolución, coordenadas y estado de maximización de ventana | Persistente | Técnica (Esencial para usabilidad) |
 | \`apex_active_doc\` | Local / On-Device | SessionStorage | Mantener el identificador del documento activo en edición | Sesión activa | Técnica (Esencial) |
 | \`apex_zoom_level\` | Local / On-Device | LocalStorage | Factor de escalado de renderizado de lienzo para accesibilidad visual | 12 meses | Personalización (Consentimiento opcional) |
-| \`apex_local_metrics\` | Local / On-Device | IndexedDB | Métricas de rendimiento de fórmulas y cálculo de CPU en local | 30 días | Analítica On-Device (Consentimiento opcional) |
 
 4. PROCEDIMIENTO DE REVOCACIÓN Y SUPRESIÓN DEL CONSENTIMIENTO:
 El usuario puede revocar libremente su consentimiento en cualquier instante desde el panel 'Cookies & LSSI' del Centro de Privacidad o haciendo clic en 'Reiniciar Consentimiento', lo que restablecerá el banner de consentimiento conforme al estándar de accesibilidad bidireccional de la AEPD.
@@ -651,7 +651,7 @@ El usuario puede revocar libremente su consentimiento en cualquier instante desd
                       <td className="p-3 font-mono font-bold text-purple-600 dark:text-purple-400">RAT-03 (Vault)</td>
                       <td className="p-3">Bases de datos relacionales estructuradas transaccionales</td>
                       <td className="p-3">Tablas de clientes, inventarios y catálogos de datos</td>
-                      <td className="p-3"><span className="px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 font-mono text-[10px]">OPFS Aislado</span></td>
+                      <td className="p-3"><span className="px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 font-mono text-[10px]">LocalStorage</span></td>
                       <td className="p-3">Motor SQLite WASM en sandbox sin llamadas a APIs del sistema operativo</td>
                     </tr>
                     <tr className="hover:bg-slate-50 dark:hover:bg-obsidian-850/50">
@@ -1038,7 +1038,7 @@ El usuario puede revocar libremente su consentimiento en cualquier instante desd
                     <strong className="text-slate-900 dark:text-white">Almacén Seguro</strong>
                   </div>
                   <p className="text-slate-500 text-[11px]">
-                    <strong>Origin Private File System (OPFS)</strong> aislado del resto de procesos del sistema operativo.
+                    <strong>Almacén Local Soberano (LocalStorage)</strong> aislado del resto de procesos del sistema operativo.
                   </p>
                 </div>
               </div>
@@ -1302,7 +1302,7 @@ El usuario puede revocar libremente su consentimiento en cualquier instante desd
                   </div>
                   <p className="text-[11px] text-emerald-800/80 dark:text-emerald-300/80 leading-relaxed">
                     Apex Office <strong>no tiene servidores en la nube ni vende publicidad</strong>. El almacenamiento se realiza exclusivamente
-                    en tu máquina (LocalStorage, IndexedDB y cookies técnicas del sandbox local). Cero rastreadores externos,
+                    en tu máquina (LocalStorage bajo la clave apex-office-state-v1 y cookies técnicas locales). Cero rastreadores externos,
                     cero telemetría hacia anunciantes y total cumplimiento por diseño (Privacy by Design).
                   </p>
                 </div>
@@ -1484,11 +1484,11 @@ El usuario puede revocar libremente su consentimiento en cualquier instante desd
                         <td className="p-2.5"><span className="px-2 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-mono">Personalización</span></td>
                       </tr>
                       <tr className="hover:bg-slate-50 dark:hover:bg-obsidian-850/50">
-                        <td className="p-2.5 font-mono font-semibold text-indigo-600 dark:text-indigo-400">apex_local_metrics</td>
-                        <td className="p-2.5">IndexedDB</td>
-                        <td className="p-2.5">Métricas locales de cálculo de fórmulas y optimización de caché</td>
-                        <td className="p-2.5">30 días</td>
-                        <td className="p-2.5"><span className="px-2 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-mono">Analítica On-Device</span></td>
+                        <td className="p-2.5 font-mono font-semibold text-indigo-600 dark:text-indigo-400">apex-office-state-v1</td>
+                        <td className="p-2.5">LocalStorage</td>
+                        <td className="p-2.5">Estado integral persistente de la suite (documentos, hojas, diapositivas y preferencias)</td>
+                        <td className="p-2.5">Hasta purga manual</td>
+                        <td className="p-2.5"><span className="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-mono">Técnica (Esencial)</span></td>
                       </tr>
                     </tbody>
                   </table>

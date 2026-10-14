@@ -114,7 +114,7 @@ export const DataVaultView: React.FC = () => {
 
   // Generate simulated local SQLite DDL / SQL
   const simulatedSql = `
--- Esquema DDL en SQLite WASM / OPFS
+-- Esquema DDL en Almacén Relacional Soberano (LocalStorage)
 CREATE TABLE IF NOT EXISTS "${currentTable.name.toLowerCase().replace(/\s+/g, '_')}" (
   "id" TEXT PRIMARY KEY,
 ${currentTable.fields.map((f) => `  "${f.id}" ${f.type.toUpperCase()}${f.required ? ' NOT NULL' : ''}`).join(',\n')}
@@ -756,7 +756,7 @@ ORDER BY id ASC;
         </div>
         <div className="flex items-center space-x-2 text-emerald-400">
           <HardDrive className="w-3 h-3" />
-          <span>Almacenamiento Local OPFS (IndexedDB)</span>
+          <span>Almacenamiento Local Soberano (LocalStorage)</span>
         </div>
       </footer>
     </div>

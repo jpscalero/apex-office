@@ -7,4 +7,16 @@ export default defineConfig({
   server: {
     port: 5175,
   },
+  build: {
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-icons': ['lucide-react'],
+          'katex': ['katex'],
+        },
+      },
+    },
+  },
 });

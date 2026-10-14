@@ -17,6 +17,7 @@ import {
   Clock,
 } from 'lucide-react';
 import { useOfficeStore } from '../../store/useOfficeStore';
+import { formatRelativeTime } from '../../core/timeFormat';
 
 export const Sidebar: React.FC = () => {
   const {
@@ -152,7 +153,7 @@ export const Sidebar: React.FC = () => {
                   <div className="flex items-center space-x-2 text-[10px] text-slate-400 mt-1">
                     <span>{doc.wordCount} palabras</span>
                     <span>•</span>
-                    <span>{doc.lastModified}</span>
+                    <span>{formatRelativeTime(doc.lastModified)}</span>
                   </div>
                 </div>
                 {docs.length > 1 && (
@@ -189,7 +190,7 @@ export const Sidebar: React.FC = () => {
                 <div className="flex items-center space-x-2 text-[10px] text-slate-400 mt-1 font-mono">
                   <span>{sheet.sheets.length} hoja(s)</span>
                   <span>•</span>
-                  <span>{sheet.lastModified}</span>
+                  <span>{formatRelativeTime(sheet.lastModified)}</span>
                 </div>
               </div>
             );
@@ -408,7 +409,7 @@ export const Sidebar: React.FC = () => {
         <div className="flex items-center justify-between text-[11px] text-slate-400">
           <span className="flex items-center space-x-1.5">
             <HardDrive className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Almacenamiento OPFS</span>
+            <span>Almacén Soberano</span>
           </span>
           <span className="font-mono text-emerald-400">Local (100%)</span>
         </div>

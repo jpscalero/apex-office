@@ -99,33 +99,38 @@ pnpm dev
 
 ### Ejecución en Modo Aplicación de Escritorio (Electron)
 ```bash
-pnpm dev:electron
+pnpm app:dev
 ```
 
-### Compilación para Producción (Windows EXE)
+### Compilación y Verificación de Producción
 ```bash
-pnpm build:win
-```
+# Verificación estricta de TypeScript y bundle de producción
+pnpm build
 
-El ejecutable nativo para Windows se generará en la carpeta `dist-win/ApexOffice/`.
+# Generación del instalador y binario portable de Windows
+pnpm app:build:win
+```
 
 ---
 
-## ⌨️ Atajos de Teclado Principales
+## 📚 Documentación Técnica & Wiki
 
-| Atajo | Acción |
-| :--- | :--- |
-| `Ctrl + K` | Abrir Paleta Universal de Comandos |
-| `Ctrl + Shift + P` | Abrir Centro Integral de Privacidad y RGPD |
-| `Ctrl + N` | Crear nuevo documento / hoja / diapositiva |
-| `Ctrl + S` / `Ctrl + Shift + E` | Guardar / Exportar en formatos abiertos |
-| `F11` | Maximizar / Ajustar ventana completa a pantalla |
-| `Shift + F` | Alternar Modo Zen / Concentración |
-| `F5` | Iniciar presentación de diapositivas a pantalla completa |
+Toda la documentación técnica, manuales de usuario, arquitectura de seguridad y guías de desarrollo están publicadas en la **[Wiki Oficial de Apex Office Suite](https://github.com/jpscalero/apex-office/wiki)**:
+
+- 📖 **[Arquitectura y Soberanía Tecnológica](https://github.com/jpscalero/apex-office/wiki/Arquitectura-y-Soberania)**
+- 🧩 **[Catálogo de Módulos de la Suite](https://github.com/jpscalero/apex-office/wiki/Modulos-de-la-Suite)**
+- 📐 **[Motor de Fórmulas y Evaluación AST](https://github.com/jpscalero/apex-office/wiki/Motor-de-Formulas-y-Calculo)**
+- 🛡️ **[Ciberseguridad y Cumplimiento RGPD](https://github.com/jpscalero/apex-office/wiki/Seguridad-y-Cumplimiento-RGPD)**
+- ⌨️ **[Atajos de Teclado y Productividad](https://github.com/jpscalero/apex-office/wiki/Atajos-de-Teclado-y-Productividad)**
+- 🛠️ **[Guía de Desarrollo y Compilación](https://github.com/jpscalero/apex-office/wiki/Guia-de-Desarrollo-y-Compilacion)**
+- ❓ **[Preguntas Frecuentes (FAQ)](https://github.com/jpscalero/apex-office/wiki/Preguntas-Frecuentes)**
+
+Consulta el **[Informe Técnico de Remediación (REMEDIATION-REPORT.md)](./REMEDIATION-REPORT.md)** para conocer el detalle de los 13 hallazgos auditados y subsanados.
 
 ---
 
 ## 📄 Licencia
 
 Distribuido bajo licencia **Mozilla Public License 2.0 (MPL-2.0)**.
-Consulte `LICENSE` para más detalles.
+Consulte el archivo [`LICENSE`](./LICENSE) para más detalles.
+

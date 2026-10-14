@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import katex from 'katex';
+import { FormulaEngine } from '../../core/formulaEngine';
 import {
   Play,
   RotateCcw,
@@ -1593,13 +1594,18 @@ export const ScienceNotebookView: React.FC = () => {
     [cells, globalExecutionCounter]
   );
 
-  // Ejecución segura de expresiones TypeScript
+  // Safe mathematical evaluation without dynamic code compilation
   const evalSafely = (code: string): string => {
     try {
-      const sanitized = code.replace(/console\.log/g, '');
-      const fn = new Function('Math', `"use strict"; return (${sanitized});`);
-      const res = fn(Math);
-      return res !== undefined ? String(res) : 'Proceso completado sin retorno';
+      const sanitized = code.replace(/console\.log/g, '').trim();
+      const res = FormulaEngine.evalArithmeticExpression(sanitized);
+      if (typeof res === 'number') {
+        return String(res);
+      }
+      if (res !== '#ERROR!') {
+        return String(res);
+      }
+      return 'Proceso completado sin retorno';
     } catch {
       return 'Ejecución completada con código de salida 0';
     }

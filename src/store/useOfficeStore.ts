@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import {
   OfficeModule,
   ThemeMode,
@@ -16,6 +17,7 @@ import {
 } from '../types';
 import { FormulaEngine } from '../core/formulaEngine';
 import { SecuritySanitizer } from '../core/securitySanitizer';
+import { sha256Sync } from '../core/crypto';
 
 interface OfficeState {
   // Navigation & Shell
@@ -121,6 +123,12 @@ interface OfficeState {
   // 6. Security Audit
   securityAudit: SecurityAuditResult;
   runAudit: () => void;
+
+  // 7. Sovereignty, Storage & Global Shortcuts
+  persistenceWarning: boolean;
+  checkPersistenceQuota: () => void;
+  purgeAllStoredData: () => void;
+  newFromShortcut: (type: 'doc' | 'sheet' | 'deck') => void;
 }
 
 // Initial Data
@@ -142,7 +150,7 @@ const INITIAL_DOCS: DocItem[] = [
     wordCount: 178,
     charCount: 1240,
     readingTimeMin: 1,
-    lastModified: 'Hoy, 10:45',
+    lastModified: Date.now() - 3600 * 1000 * 2,
     tags: ['Seguridad', 'Arquitectura', 'Oficial'],
     isFavorite: true,
   },
@@ -155,7 +163,7 @@ const INITIAL_DOCS: DocItem[] = [
     wordCount: 54,
     charCount: 380,
     readingTimeMin: 1,
-    lastModified: 'Ayer, 18:20',
+    lastModified: Date.now() - 86400 * 1000 * 1,
     tags: ['Finanzas', 'Q4'],
   },
 ];
@@ -165,7 +173,7 @@ const INITIAL_SHEETS: SpreadsheetItem[] = [
     id: 'sheet-1',
     title: 'Presupuesto Financiero & Balance de Operaciones',
     activeSheetId: 's1',
-    lastModified: 'Hoy, 11:15',
+    lastModified: Date.now() - 3600 * 1000 * 1.5,
     sheets: [
       {
         id: 's1',
@@ -216,7 +224,7 @@ const INITIAL_DECKS: SlideDeckItem[] = [
     id: 'deck-1',
     title: 'Apex Suite • Presentación de Producto y Estrategia Q4',
     aspectRatio: '16:9',
-    lastModified: 'Hoy, 09:30',
+    lastModified: Date.now() - 3600 * 1000 * 3,
     slides: [
       {
         id: 'sl-1',
@@ -438,110 +446,119 @@ Equipo de Seguridad Ofensiva`,
   },
 ];
 
-export const useOfficeStore = create<OfficeState>((set, get) => ({
-  currentModule: 'writer',
-  setModule: (module) => set({ currentModule: module }),
-  theme: 'classic',
-  setTheme: (theme) => set({ theme }),
-  toggleTheme: () => set((state) => ({ theme: state.theme === 'classic' ? 'obsidian' : 'classic' })),
-  zenMode: false,
-  toggleZenMode: () => set((state) => ({ zenMode: !state.zenMode })),
-  isCommandPaletteOpen: false,
-  setCommandPaletteOpen: (open) => set({ isCommandPaletteOpen: open }),
-  isExportModalOpen: false,
-  setExportModalOpen: (open) => set({ isExportModalOpen: open }),
-  isSecurityModalOpen: false,
-  setSecurityModalOpen: (open) => set({ isSecurityModalOpen: open }),
-  isAICopilotOpen: false,
-  toggleAICopilot: () => set((state) => ({ isAICopilotOpen: !state.isAICopilotOpen })),
-  isMacroIDEOpen: false,
-  toggleMacroIDE: () => set((state) => ({ isMacroIDEOpen: !state.isMacroIDEOpen })),
-  isTimeMachineOpen: false,
-  toggleTimeMachine: () => set((state) => ({ isTimeMachineOpen: !state.isTimeMachineOpen })),
-  isPrivacyCenterOpen: false,
-  setPrivacyCenterOpen: (open) => set({ isPrivacyCenterOpen: open }),
-  togglePrivacyCenter: () => set((state) => ({ isPrivacyCenterOpen: !state.isPrivacyCenterOpen })),
-  activePrivacyTab: 'rgpd',
-  setActivePrivacyTab: (tab) => set({ activePrivacyTab: tab }),
-  isCookieBannerDismissed: false,
-  dismissCookieBanner: () => set({ isCookieBannerDismissed: true }),
-  resetCookieConsent: () => set({ isCookieBannerDismissed: false }),
-  cookiePreferences: {
-    technical: true,
-    preferences: true,
-    analytics: false,
-  },
-  setCookiePreferences: (prefs) =>
-    set((state) => ({
-      cookiePreferences: { ...state.cookiePreferences, ...prefs },
-    })),
+const PRO_LICENSE_HASHES = new Set([
+  '28e8e57c01b240bcaa33c1de6e2cf8181966af8ec43eff5f696d615a4d8f1772', // APEX-PRO-2026
+  'cd6d4fa133df6549b7464f165ca26fe33eee54cd85c752b59f09e99f569f8a2b', // PRO-LIBRE
+  '116c440a503ce4d8684e6a4ab65028d473f4b2e952a24a90f81f5d582e56b573', // SOBERANIA-2026
+]);
 
-  // Ad Banners & Sponsorship / Pro License Implementation
-  showAdBanners: true,
-  toggleAdBanners: () => set((state) => ({ showAdBanners: !state.showAdBanners })),
-  setShowAdBanners: (show) => set({ showAdBanners: show }),
-  adBannerPosition: 'top',
-  setAdBannerPosition: (pos) => set({ adBannerPosition: pos }),
-  isProLicense: false,
-  activateProLicense: (key: string) => {
-    const cleaned = key.trim().toUpperCase();
-    if (cleaned === 'APEX-PRO-2026' || cleaned === 'PRO-LIBRE' || cleaned === 'SOBERANIA-2026') {
-      set({ isProLicense: true, showAdBanners: false });
-      return true;
-    }
-    return false;
-  },
-  isAdManagerOpen: false,
-  setAdManagerOpen: (open) => set({ isAdManagerOpen: open }),
-
-  // 1. Writer
-  docs: INITIAL_DOCS,
-  activeDocId: 'doc-1',
-  setActiveDoc: (id) => set({ activeDocId: id }),
-  updateDocTitle: (id, title) =>
-    set((state) => ({
-      docs: state.docs.map((d) => (d.id === id ? { ...d, title, lastModified: 'Hace un momento' } : d)),
-    })),
-  updateDocContent: (id, content) => {
-    const textOnly = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-    const words = textOnly ? textOnly.split(' ').length : 0;
-    const chars = textOnly.length;
-    const readingTime = Math.max(1, Math.ceil(words / 200));
-
-    set((state) => ({
-      docs: state.docs.map((d) =>
-        d.id === id
-          ? {
-              ...d,
-              content,
-              wordCount: words,
-              charCount: chars,
-              readingTimeMin: readingTime,
-              lastModified: 'Hace un momento',
-            }
-          : d
-      ),
-    }));
-  },
-  createDoc: (title) => {
-    const newId = `doc-${Date.now()}`;
-    const newDoc: DocItem = {
-      id: newId,
-      title: title || 'Documento sin título',
-      content: '<h1>Nuevo Documento</h1><p>Comienza a escribir aquí...</p>',
-      wordCount: 5,
-      charCount: 35,
-      readingTimeMin: 1,
-      lastModified: 'Hace un momento',
-      tags: ['Borrador'],
-    };
-    set((state) => ({
-      docs: [newDoc, ...state.docs],
-      activeDocId: newId,
+export const useOfficeStore = create<OfficeState>()(
+  persist(
+    (set, get) => ({
       currentModule: 'writer',
-    }));
-    return newId;
-  },
+      setModule: (module) => set({ currentModule: module }),
+      theme: 'classic',
+      setTheme: (theme) => set({ theme }),
+      toggleTheme: () => set((state) => ({ theme: state.theme === 'classic' ? 'obsidian' : 'classic' })),
+      zenMode: false,
+      toggleZenMode: () => set((state) => ({ zenMode: !state.zenMode })),
+      isCommandPaletteOpen: false,
+      setCommandPaletteOpen: (open) => set({ isCommandPaletteOpen: open }),
+      isExportModalOpen: false,
+      setExportModalOpen: (open) => set({ isExportModalOpen: open }),
+      isSecurityModalOpen: false,
+      setSecurityModalOpen: (open) => set({ isSecurityModalOpen: open }),
+      isAICopilotOpen: false,
+      toggleAICopilot: () => set((state) => ({ isAICopilotOpen: !state.isAICopilotOpen })),
+      isMacroIDEOpen: false,
+      toggleMacroIDE: () => set((state) => ({ isMacroIDEOpen: !state.isMacroIDEOpen })),
+      isTimeMachineOpen: false,
+      toggleTimeMachine: () => set((state) => ({ isTimeMachineOpen: !state.isTimeMachineOpen })),
+      isPrivacyCenterOpen: false,
+      setPrivacyCenterOpen: (open) => set({ isPrivacyCenterOpen: open }),
+      togglePrivacyCenter: () => set((state) => ({ isPrivacyCenterOpen: !state.isPrivacyCenterOpen })),
+      activePrivacyTab: 'rgpd',
+      setActivePrivacyTab: (tab) => set({ activePrivacyTab: tab }),
+      isCookieBannerDismissed: false,
+      dismissCookieBanner: () => set({ isCookieBannerDismissed: true }),
+      resetCookieConsent: () => set({ isCookieBannerDismissed: false }),
+      cookiePreferences: {
+        technical: true,
+        preferences: true,
+        analytics: false,
+      },
+      setCookiePreferences: (prefs) =>
+        set((state) => ({
+          cookiePreferences: { ...state.cookiePreferences, ...prefs },
+        })),
+
+      // Ad Banners & Sponsorship / Pro License Implementation
+      showAdBanners: true,
+      toggleAdBanners: () => set((state) => ({ showAdBanners: !state.showAdBanners })),
+      setShowAdBanners: (show) => set({ showAdBanners: show }),
+      adBannerPosition: 'top',
+      setAdBannerPosition: (pos) => set({ adBannerPosition: pos }),
+      isProLicense: false,
+      activateProLicense: (key: string) => {
+        const cleaned = key.trim().toUpperCase();
+        const hash = sha256Sync(cleaned);
+        if (PRO_LICENSE_HASHES.has(hash)) {
+          set({ isProLicense: true, showAdBanners: false });
+          return true;
+        }
+        return false;
+      },
+      isAdManagerOpen: false,
+      setAdManagerOpen: (open) => set({ isAdManagerOpen: open }),
+
+      // 1. Writer
+      docs: INITIAL_DOCS,
+      activeDocId: 'doc-1',
+      setActiveDoc: (id) => set({ activeDocId: id }),
+      updateDocTitle: (id, title) =>
+        set((state) => ({
+          docs: state.docs.map((d) => (d.id === id ? { ...d, title, lastModified: Date.now() } : d)),
+        })),
+      updateDocContent: (id, content) => {
+        const textOnly = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        const words = textOnly ? textOnly.split(' ').length : 0;
+        const chars = textOnly.length;
+        const readingTime = Math.max(1, Math.ceil(words / 200));
+
+        set((state) => ({
+          docs: state.docs.map((d) =>
+            d.id === id
+              ? {
+                  ...d,
+                  content,
+                  wordCount: words,
+                  charCount: chars,
+                  readingTimeMin: readingTime,
+                  lastModified: Date.now(),
+                }
+              : d
+          ),
+        }));
+      },
+      createDoc: (title) => {
+        const newId = `doc-${Date.now()}`;
+        const newDoc: DocItem = {
+          id: newId,
+          title: title || 'Documento sin título',
+          content: '<h1>Nuevo Documento</h1><p>Comienza a escribir aquí...</p>',
+          wordCount: 5,
+          charCount: 35,
+          readingTimeMin: 1,
+          lastModified: Date.now(),
+          tags: ['Borrador'],
+        };
+        set((state) => ({
+          docs: [newDoc, ...state.docs],
+          activeDocId: newId,
+          currentModule: 'writer',
+        }));
+        return newId;
+      },
   deleteDoc: (id) =>
     set((state) => {
       const remaining = state.docs.filter((d) => d.id !== id);
@@ -586,7 +603,7 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
         s.id === activeSpreadsheetId
           ? {
               ...s,
-              lastModified: 'Hace un momento',
+              lastModified: Date.now(),
               sheets: s.sheets.map((sh) => (sh.id === activeSheet.id ? { ...sh, cells: recalculated } : sh)),
             }
           : s
@@ -599,7 +616,7 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
       id: newId,
       title: title || 'Hoja de Cálculo sin título',
       activeSheetId: 's1',
-      lastModified: 'Hace un momento',
+      lastModified: Date.now(),
       sheets: [
         {
           id: 's1',
@@ -643,7 +660,7 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
               ...s,
               sheets: [...s.sheets, newSheet],
               activeSheetId: newSheetId,
-              lastModified: 'Hace un momento',
+              lastModified: Date.now(),
             }
           : s
       ),
@@ -778,7 +795,7 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
     };
 
     set((state) => ({
-      decks: state.decks.map((d) => (d.id === activeDeckId ? { ...d, slides: [...d.slides, newSlide] } : d)),
+      decks: state.decks.map((d) => (d.id === activeDeckId ? { ...d, lastModified: Date.now(), slides: [...d.slides, newSlide] } : d)),
       activeSlideIndex: deck.slides.length,
     }));
   },
@@ -800,7 +817,7 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
     newSlides.splice(index + 1, 0, clonedSlide);
 
     set((state) => ({
-      decks: state.decks.map((d) => (d.id === activeDeckId ? { ...d, slides: newSlides } : d)),
+      decks: state.decks.map((d) => (d.id === activeDeckId ? { ...d, lastModified: Date.now(), slides: newSlides } : d)),
       activeSlideIndex: index + 1,
     }));
   },
@@ -811,7 +828,7 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
 
     const remaining = deck.slides.filter((_, i) => i !== index);
     set((state) => ({
-      decks: state.decks.map((d) => (d.id === activeDeckId ? { ...d, slides: remaining } : d)),
+      decks: state.decks.map((d) => (d.id === activeDeckId ? { ...d, lastModified: Date.now(), slides: remaining } : d)),
       activeSlideIndex: Math.min(activeSlideIndex, remaining.length - 1),
     }));
   },
@@ -822,6 +839,7 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
         d.id === activeDeckId
           ? {
               ...d,
+              lastModified: Date.now(),
               slides: d.slides.map((sl, idx) => (idx === activeSlideIndex ? { ...sl, notes } : sl)),
             }
           : d
@@ -835,6 +853,7 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
         d.id === activeDeckId
           ? {
               ...d,
+              lastModified: Date.now(),
               slides: d.slides.map((sl, idx) => (idx === activeSlideIndex ? { ...sl, background: bg } : sl)),
             }
           : d
@@ -848,6 +867,7 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
         d.id === activeDeckId
           ? {
               ...d,
+              lastModified: Date.now(),
               slides: d.slides.map((sl, sIdx) =>
                 sIdx === slideIndex
                   ? {
@@ -864,7 +884,7 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
   updateDeckAspectRatio: (ratio) => {
     const { activeDeckId } = get();
     set((state) => ({
-      decks: state.decks.map((d) => (d.id === activeDeckId ? { ...d, aspectRatio: ratio } : d)),
+      decks: state.decks.map((d) => (d.id === activeDeckId ? { ...d, lastModified: Date.now(), aspectRatio: ratio } : d)),
     }));
   },
 
@@ -955,7 +975,7 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
     ddeThreatsDetected: 0,
     xxeThreatsDetected: 0,
     hiddenMetadataStripped: 0,
-    externalLinksVerified: 3,
+    externalLinksVerified: 0,
     threats: [
       {
         severity: 'info',
@@ -974,7 +994,109 @@ export const useOfficeStore = create<OfficeState>((set, get) => ({
     const result = SecuritySanitizer.runAudit({
       docContent: doc?.content,
       sheetCells: cells,
+      sheets: sheet?.sheets,
     });
     set({ securityAudit: result });
   },
-}));
+
+  // 7. Sovereignty, Storage & Global Shortcuts
+  persistenceWarning: false,
+  checkPersistenceQuota: () => {
+    try {
+      const raw = localStorage.getItem('apex-office-state-v1') || '';
+      const bytes = new Blob([raw]).size;
+      set({ persistenceWarning: bytes > 4.5 * 1024 * 1024 });
+    } catch {
+      set({ persistenceWarning: false });
+    }
+  },
+  purgeAllStoredData: () => {
+    try {
+      const key = 'apex-office-state-v1';
+      const existing = localStorage.getItem(key);
+      if (existing) {
+        const len = existing.length;
+        localStorage.setItem(key, '0'.repeat(len));
+        localStorage.setItem(key, '1'.repeat(len));
+        const randomNoise = Array.from({ length: Math.min(len, 1024) }, () =>
+          Math.floor(Math.random() * 36).toString(36)
+        ).join('');
+        localStorage.setItem(key, randomNoise);
+        localStorage.removeItem(key);
+      }
+      localStorage.clear();
+    } catch {
+      try {
+        localStorage.clear();
+      } catch {}
+    }
+  },
+  newFromShortcut: (type) => {
+    if (type === 'doc') {
+      get().createDoc();
+    } else if (type === 'sheet') {
+      get().createSpreadsheet();
+    } else if (type === 'deck') {
+      const newId = `deck-${Date.now()}`;
+      const newDeck: SlideDeckItem = {
+        id: newId,
+        title: 'Nueva Presentación',
+        aspectRatio: '16:9',
+        lastModified: Date.now(),
+        slides: [
+          {
+            id: `sl-${Date.now()}`,
+            background: '#0c0e12',
+            elements: [
+              {
+                id: `el-${Date.now()}`,
+                type: 'title',
+                x: 10,
+                y: 35,
+                width: 80,
+                height: 25,
+                content: 'Diapositiva Inicial',
+                subtitle: 'Creada mediante atajo de teclado',
+                fontSize: 40,
+                color: '#f8fafc',
+              },
+            ],
+          },
+        ],
+      };
+      set((state) => ({
+        decks: [newDeck, ...state.decks],
+        activeDeckId: newId,
+        activeSlideIndex: 0,
+        currentModule: 'slides',
+      }));
+    }
+  },
+    }),
+    {
+      name: 'apex-office-state-v1',
+      partialize: (state) => ({
+        currentModule: state.currentModule,
+        theme: state.theme,
+        zenMode: state.zenMode,
+        showAdBanners: state.showAdBanners,
+        adBannerPosition: state.adBannerPosition,
+        isProLicense: state.isProLicense,
+        cookiePreferences: state.cookiePreferences,
+        isCookieBannerDismissed: state.isCookieBannerDismissed,
+        docs: state.docs,
+        activeDocId: state.activeDocId,
+        spreadsheets: state.spreadsheets,
+        activeSpreadsheetId: state.activeSpreadsheetId,
+        activeCellCoord: state.activeCellCoord,
+        decks: state.decks,
+        activeDeckId: state.activeDeckId,
+        activeSlideIndex: state.activeSlideIndex,
+        tables: state.tables,
+        activeTableId: state.activeTableId,
+        events: state.events,
+        mails: state.mails,
+      }),
+    }
+  )
+);

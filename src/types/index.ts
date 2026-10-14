@@ -12,7 +12,7 @@ export interface DocItem {
   wordCount: number;
   charCount: number;
   readingTimeMin: number;
-  lastModified: string;
+  lastModified: number | string;
   tags: string[];
   isFavorite?: boolean;
 }
@@ -49,7 +49,7 @@ export interface SpreadsheetItem {
   title: string;
   sheets: SheetData[];
   activeSheetId: string;
-  lastModified: string;
+  lastModified: number | string;
 }
 
 // ==========================================
@@ -81,7 +81,7 @@ export interface SlideDeckItem {
   title: string;
   aspectRatio: '16:9' | '4:3';
   slides: Slide[];
-  lastModified: string;
+  lastModified: number | string;
 }
 
 // ==========================================
@@ -273,7 +273,7 @@ export interface DiagramItem {
   title: string;
   nodes: DiagramNode[];
   edges: DiagramEdge[];
-  lastModified: string;
+  lastModified: number | string;
 }
 
 // ==========================================
@@ -295,7 +295,7 @@ export interface ScienceNotebookItem {
   id: string;
   title: string;
   cells: NotebookCell[];
-  lastModified: string;
+  lastModified: number | string;
 }
 
 // ==========================================
@@ -329,7 +329,7 @@ export interface SpatialCanvasItem {
   panY: number;
   stickyNotes: SpatialStickyNote[];
   frames: SpatialFrame[];
-  lastModified: string;
+  lastModified: number | string;
 }
 
 // ==========================================
@@ -359,7 +359,7 @@ export interface BIDashboardItem {
   title: string;
   datasetId: string;
   widgets: BIWidget[];
-  lastModified: string;
+  lastModified: number | string;
 }
 
 // ==========================================

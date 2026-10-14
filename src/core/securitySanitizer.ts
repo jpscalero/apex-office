@@ -4,6 +4,8 @@ export class SecuritySanitizer {
   /**
    * Sanitizes spreadsheet inputs to completely eradicate DDE (Dynamic Data Exchange)
    * and CSV formula injection vectors (CWE-1236).
+   * Note: Isolated pipe characters ('|') are not blocked as DDE threats unless they match
+   * the malicious DDE command invocation pattern.
    */
   public static sanitizeFormulaInput(input: string): { cleanInput: string; wasThreatBlocked: boolean } {
     let clean = input.trim();
@@ -16,26 +18,25 @@ export class SecuritySanitizer {
       threatBlocked = true;
     }
 
-    // Strip external application protocol invocation
-    if (clean.includes('|')) {
-      clean = clean.replace(/\|/g, '');
-      threatBlocked = true;
-    }
-
     return { cleanInput: clean, wasThreatBlocked: threatBlocked };
   }
 
   /**
    * Escapes dangerous leading characters for CSV/TSV export to prevent spreadsheet execution.
+   * Negative numbers (e.g. -145) are preserved without prepending a single quote.
+   * Leading '-' is only escaped if followed by a non-digit character (regex ^-[^0-9]).
+   * Leading =, +, @, |, \t, \r, \n remain escaped defensively.
    */
   public static sanitizeCsvExportCell(cellValue: string): string {
     if (!cellValue) return '';
     const rawStr = String(cellValue);
     const trimmed = rawStr.trim();
-    if (
-      ['\t', '\r', '\n'].some((char) => rawStr.startsWith(char)) ||
-      ['=', '+', '-', '@', '|'].some((char) => trimmed.startsWith(char))
-    ) {
+
+    const startsWithDangerousWhitespace = ['\t', '\r', '\n'].some((char) => rawStr.startsWith(char));
+    const startsWithDangerousFormulaChar = ['=', '+', '@', '|'].some((char) => trimmed.startsWith(char));
+    const isDangerousMinus = /^-[^0-9]/.test(trimmed) || trimmed === '-';
+
+    if (startsWithDangerousWhitespace || startsWithDangerousFormulaChar || isDangerousMinus) {
       // Prepend defensive single quote
       return `'${rawStr}`;
     }
@@ -115,10 +116,14 @@ export class SecuritySanitizer {
 
   /**
    * Executes a full security & privacy audit on the active workspace.
+   * Supports single sheetCells or multiple sheets, reporting 'Hoja X · Celda Y'.
+   * Scans real external links (http/https and <a href>) in docContent and cells
+   * to accurately calculate externalLinksVerified.
    */
   public static runAudit(data: {
     docContent?: string;
     sheetCells?: Record<string, { raw: string }>;
+    sheets?: Array<{ name: string; cells: Record<string, { raw: string }> }>;
   }): SecurityAuditResult {
     const threats: SecurityAuditResult['threats'] = [];
     let ddeCount = 0;
@@ -126,26 +131,88 @@ export class SecuritySanitizer {
     let metadataCount = 0;
     let linksCount = 0;
 
-    // 1. Audit Spreadsheet formulas
-    if (data.sheetCells) {
+    // Helper to scan for external URLs in text
+    const scanForExternalLinks = (text: string, locationDesc: string) => {
+      if (!text) return;
+
+      // Extract href from <a> tags
+      const anchorRegex = /<a\s+(?:[^>]*?\s+)?href=["']([^"']+)["'][^>]*>/gi;
+      let match: RegExpExecArray | null;
+      while ((match = anchorRegex.exec(text)) !== null) {
+        const url = match[1];
+        linksCount++;
+        const { isBlocked } = this.sanitizeExternalUrl(url);
+        if (isBlocked) {
+          threats.push({
+            severity: 'high',
+            vector: 'Enlace Externo Bloqueado',
+            description: `Se detectó un protocolo peligroso en el enlace en ${locationDesc}: "${url}"`,
+            actionTaken: 'Enlace neutralizado.',
+          });
+        }
+      }
+
+      // Extract raw http/https URLs
+      const urlRegex = /\bhttps?:\/\/[^\s"'<>]+/gi;
+      while ((match = urlRegex.exec(text)) !== null) {
+        const url = match[0];
+        linksCount++;
+        const { isBlocked } = this.sanitizeExternalUrl(url);
+        if (isBlocked) {
+          threats.push({
+            severity: 'high',
+            vector: 'Enlace Externo Bloqueado',
+            description: `Se detectó un protocolo peligroso en la URL en ${locationDesc}: "${url}"`,
+            actionTaken: 'Enlace neutralizado.',
+          });
+        }
+      }
+    };
+
+    // 1. Audit Spreadsheet sheets
+    if (data.sheets && data.sheets.length > 0) {
+      for (const sheet of data.sheets) {
+        const sheetName = sheet.name || 'Hoja';
+        if (sheet.cells) {
+          for (const [coord, cell] of Object.entries(sheet.cells)) {
+            if (cell?.raw && typeof cell.raw === 'string') {
+              const { wasThreatBlocked } = this.sanitizeFormulaInput(cell.raw);
+              if (wasThreatBlocked) {
+                ddeCount++;
+                threats.push({
+                  severity: 'critical',
+                  vector: `Inyección DDE en Hoja ${sheetName} · Celda ${coord}`,
+                  description: `La celda ${coord} de la hoja "${sheetName}" contenía un comando DDE malicioso: "${cell.raw}"`,
+                  actionTaken: 'Token DDE neutralizado; ejecución de comandos del host prohibida.',
+                });
+              }
+              scanForExternalLinks(cell.raw, `Hoja ${sheetName} · Celda ${coord}`);
+            }
+          }
+        }
+      }
+    } else if (data.sheetCells) {
       for (const [coord, cell] of Object.entries(data.sheetCells)) {
-        if (cell.raw && typeof cell.raw === 'string') {
+        if (cell?.raw && typeof cell.raw === 'string') {
           const { wasThreatBlocked } = this.sanitizeFormulaInput(cell.raw);
           if (wasThreatBlocked) {
             ddeCount++;
             threats.push({
               severity: 'critical',
               vector: `Inyección DDE en Celda ${coord}`,
-              description: `La celda ${coord} contenía un pipe (|) o llamada a subproceso del SO: "${cell.raw}"`,
+              description: `La celda ${coord} contenía un comando DDE malicioso: "${cell.raw}"`,
               actionTaken: 'Token DDE neutralizado; ejecución de comandos del host prohibida.',
             });
           }
+          scanForExternalLinks(cell.raw, `Celda ${coord}`);
         }
       }
     }
 
     // 2. Audit Document content
     if (data.docContent) {
+      scanForExternalLinks(data.docContent, 'el documento');
+
       if (data.docContent.includes('\\\\')) {
         threats.push({
           severity: 'high',

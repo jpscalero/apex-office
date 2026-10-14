@@ -554,6 +554,17 @@ export const SpatialCanvasView: React.FC = () => {
   // AI Semantic Clustering Animation
   const [isClustering, setIsClustering] = useState<boolean>(false);
   const [aiInferenceNotice, setAiInferenceNotice] = useState<string | null>(null);
+  const clusterAnimIdRef = useRef<number | null>(null);
+  const clusterTimeout1Ref = useRef<NodeJS.Timeout | null>(null);
+  const clusterTimeout2Ref = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (clusterAnimIdRef.current) cancelAnimationFrame(clusterAnimIdRef.current);
+      if (clusterTimeout1Ref.current) clearTimeout(clusterTimeout1Ref.current);
+      if (clusterTimeout2Ref.current) clearTimeout(clusterTimeout2Ref.current);
+    };
+  }, []);
 
   // Telepresence & Spatial HRTF Audio
   const [peers, setPeers] = useState<CollaboratorPeer[]>(INITIAL_COLLABORATORS);
@@ -1065,7 +1076,7 @@ export const SpatialCanvasView: React.FC = () => {
 
     setNotes(updatedNotesWithTargets);
 
-    setTimeout(() => {
+    clusterTimeout1Ref.current = setTimeout(() => {
       setAiInferenceNotice('Agrupando notas por similitud de embeddings neuronales (MiniLM-L6)...');
     }, 250);
 
@@ -1099,17 +1110,17 @@ export const SpatialCanvasView: React.FC = () => {
       );
 
       if (progress < 1) {
-        requestAnimationFrame(animateStep);
+        clusterAnimIdRef.current = requestAnimationFrame(animateStep);
       } else {
         setIsClustering(false);
         setAiInferenceNotice(
           '✨ 12 notas agrupadas en 4 categorías semánticas • Inferencia 100% soberana en dispositivo'
         );
-        setTimeout(() => setAiInferenceNotice(null), 5000);
+        clusterTimeout2Ref.current = setTimeout(() => setAiInferenceNotice(null), 5000);
       }
     };
 
-    requestAnimationFrame(animateStep);
+    clusterAnimIdRef.current = requestAnimationFrame(animateStep);
   };
 
   // ==========================================

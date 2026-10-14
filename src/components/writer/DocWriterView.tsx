@@ -45,6 +45,7 @@ import {
   ListTree,
 } from 'lucide-react';
 import { useOfficeStore } from '../../store/useOfficeStore';
+import { formatRelativeTime } from '../../core/timeFormat';
 import { KaTeXMathModal } from './KaTeXMathModal';
 import { TableOfContentsDrawer } from './TableOfContentsDrawer';
 
@@ -1001,7 +1002,7 @@ export const DocWriterView: React.FC = () => {
                   APEX WRITER • {pageOrientation.toUpperCase()} • {pageMargin.toUpperCase()}
                 </span>
                 <span className="text-xs opacity-50">|</span>
-                <span className="text-xs opacity-70">{currentDoc?.lastModified}</span>
+                <span className="text-xs opacity-70">{formatRelativeTime(currentDoc?.lastModified)}</span>
               </div>
               <div className="flex items-center space-x-1 text-[11px] text-emerald-500 font-mono">
                 <ShieldCheck className="w-3.5 h-3.5" />

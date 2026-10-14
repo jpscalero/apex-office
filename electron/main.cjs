@@ -72,17 +72,41 @@ function createWindow() {
   });
 
   const localIndexPath = path.join(__dirname, '../dist/index.html');
+  function showBuildMissingFallback() {
+    console.warn('Apex Office: build de producción no encontrado en dist/index.html');
+    const fallbackHtml = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Apex Office Suite • Build requerido</title>
+  <style>
+    body { background-color: #0c0e12; color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
+    h1 { color: #ef4444; font-size: 24px; margin-bottom: 8px; }
+    p { color: #94a3b8; font-size: 14px; max-width: 520px; line-height: 1.6; }
+    code { background: #1e293b; padding: 4px 8px; border-radius: 4px; color: #38bdf8; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>Apex Office: Build de producción no encontrado</h1>
+  <p>No se encontró el paquete compilado en <code>dist/index.html</code>.<br />Ejecuta <code>pnpm build</code> para compilar la aplicación, o inicia el servidor de desarrollo mediante <code>pnpm app:dev</code>.</p>
+</body>
+</html>`;
+    mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(fallbackHtml));
+  }
+
   if (process.env.VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL).catch((err) => {
       console.error('Failed to load dev server, falling back to local file:', err);
       if (fs.existsSync(localIndexPath)) {
         mainWindow.loadFile(localIndexPath);
+      } else {
+        showBuildMissingFallback();
       }
     });
   } else if (fs.existsSync(localIndexPath)) {
     mainWindow.loadFile(localIndexPath);
   } else {
-    mainWindow.loadURL('http://localhost:5175');
+    showBuildMissingFallback();
   }
 
   mainWindow.on('closed', () => {
@@ -187,17 +211,31 @@ ipcMain.handle('system:getInfo', () => {
   };
 });
 
-// Lifecycle events
-app.whenReady().then(() => {
-  createWindow();
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+// Single-Instance Lock to prevent duplicate processes
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
   });
-});
+
+  // Lifecycle events
+  app.whenReady().then(() => {
+    createWindow();
+
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
+  });
+}
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
+
